@@ -8,7 +8,7 @@ use common\Registry;
 echo $hr;
 echo 'START UNIT TESTS'. PHP_EOL . PHP_EOL;
 	require('admin.php');
-#	require('course.php');
+	require('course.php');
 echo $hr;
 if ($registry->get('test_error')) {
 	out ('********* Some ERRORS found. *********');
