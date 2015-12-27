@@ -22,3 +22,10 @@ function out($string, $error=NULL) {
 	if ($error) Registry::getInstance()->set('test_error', true);
 	echo $string . PHP_EOL;
 }
+
+function compare($value, $correctValue, $message) {
+	if ($value !== $correctValue) {
+		out($message . " received: ".gettype($value)."($value), correct: ".gettype($correctValue)."({$correctValue})", true);
+		exit;
+	}
+}

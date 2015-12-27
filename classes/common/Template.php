@@ -1,7 +1,10 @@
 <?php
-namespace common
 
-class template {
+namespace common;
+
+use common\Registry;
+
+class Template {
 
 	const
 		SOURCE_VARIABLE = 2,

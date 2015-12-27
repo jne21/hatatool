@@ -2,13 +2,14 @@
 namespace common;
 
 trait entity {
-	static function renumberAll($orderedIds, $table=NULL) {
+
+	static function renumberAll($orderedIds, $table=NULL, $fieldName=self::ORDER_FIELD_NAME) {
 		$db = Registry::getInstance()->get(self::DB);
 		foreach($orderedIds as $index=>$id) {
 			if (intval($id)) {
 				$db->update(
 					$table ? $db->realEscapeString($table) : self::TABLE,
-					['num' => intval($index)+1],
+					[$fieldName => intval($index)+1],
 					"`id` = $id"
 				);
 			}
@@ -30,7 +31,7 @@ trait entity {
 		self::updateValue($id, 'show', intval($action));
 	}
 
-	static function getNextOrderIndex($whereCondition = NULL, $fieldName='num') {
+	static function getNextOrderIndex($whereCondition = NULL, $fieldName=self::ORDER_FIELD_NAME) {
 		$db = Registry::getInstance()->get(self::DB);
 		return $db->result($db->query("SELECT IFNULL(MAX(`".$db->realEscapeString($fieldName)."`), 0)+1 FROM `".self::TABLE."`".($whereCondition ? " WHERE $whereCondition" : '')), 0, 0);
 	}
@@ -44,7 +45,7 @@ trait entity {
 			'а', 'б', 'в', 'г', 'д', 'е', 'є', 'з', 'і', 'и', 'й', 'к',
 			'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ь',
 			'\'',
-			'Ä', 'Ö', 'Ü', '�', 'ä', 'ö', 'ü', 'ß'
+			'Ä', 'Ö', 'Ü', '�', 'ä', 'ö', 'ü', 'ß'
 		);
 
 		$L['to'] = array(

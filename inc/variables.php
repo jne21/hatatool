@@ -13,6 +13,11 @@
 	$site_include_path  = $site_root_absolute.'common/';
 	$site_module_path   = $site_root_absolute.'modules/';
 
+	require($site_class_path.'system/Exception.php');
+	use system\ExceptionHandler;
+	$errorHandler = new ExceptionHandler;
+	$errorHandler->debug = true;
+
 	date_default_timezone_set('Europe/Kiev');
 
 
@@ -45,21 +50,32 @@
 	define ('DB_PASSWORD', 'qyHFvQ');
 //--------------------------------------
 
-	$registry->set('i18n_language', 'ru');
-/*
+
+	$registry->set('i18n_language', 'uk');
+	
 	$locales = array (
-		'ru' =>  array (
-			'locale'    => array ('ru_RU.UTF-8', 'rus_RUS.UTF-8', 'Russian_Russia.UTF-8'),
-			'name'      => 'Русский',
-			'site_root' => '[protocol]://[domain][port]/',
-			'active'    => TRUE
-		),
-		'de' =>  array (
-			'locale'    => array ('ru_RU.UTF-8', 'rus_RUS.UTF-8', 'Russian_Russia.UTF-8'),
-			'name'      => 'Русский',
-			'site_root' => '[protocol]://[domain][port]/',
-			'active'    => TRUE
-		)
+			'uk' =>  array (
+					'locale'    => array ('uk_UA.UTF-8', 'ukr_UKR.UTF-8', 'Ukrainian_Ukraine.UTF-8'),
+					'name'      => 'Українська',
+					'active'    => TRUE
+			),
+			'en' =>  array (
+					'locale'    => array ('en_US.UTF-8', 'eng_USA.UTF-8', 'English_USA.UTF-8'),
+					'name'      => 'English',
+					'active'    => TRUE
+			),
+			'de' =>  array (
+					'locale'    => array ('de_DE.UTF-8', 'deu_DEU.UTF-8', 'German_Germany.UTF-8'),
+					'name'      => 'Deutch',
+					'active'    => TRUE
+			),
+			'ru' =>  array (
+					'locale'    => array ('ru_RU.UTF-8', 'rus_RUS.UTF-8', 'Russian_Russia.UTF-8'),
+					'name'      => 'Русский',
+					'active'    => TRUE
+			)
 	);
-*/
+	$registry->set('locales', $locales);
+	
 	setlocale(LC_ALL, $locales[$registry->get('i18n_language')]['locale']); // echo strftime("%A %d %B %Y", mktime(0, 0, 0, 12, 1, 1968));
+	
