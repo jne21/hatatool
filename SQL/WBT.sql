@@ -3,11 +3,10 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Дек 25 2015 г., 01:44
+-- Время создания: Дек 27 2015 г., 04:04
 -- Версия сервера: 10.0.21-MariaDB
 -- Версия PHP: 5.6.15
 
-SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
@@ -27,20 +26,15 @@ SET time_zone = "+00:00";
 -- Структура таблицы `admin`
 --
 
-DROP TABLE IF EXISTS `admin`;
-CREATE TABLE IF NOT EXISTS `admin` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `email` varchar(255) NOT NULL,
+CREATE TABLE `admin` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
   `login` varchar(25) NOT NULL,
   `password` varchar(40) NOT NULL,
-  `state` tinyint(3) UNSIGNED NOT NULL,
-  `description` text NOT NULL,
-  `rights` tinyint(3) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `login` (`login`,`password`),
-  KEY `name` (`name`),
-  KEY `state` (`state`)
+  `state` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  `description` text,
+  `rights` tinyint(3) UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -49,15 +43,12 @@ CREATE TABLE IF NOT EXISTS `admin` (
 -- Структура таблицы `attachment`
 --
 
-DROP TABLE IF EXISTS `attachment`;
-CREATE TABLE IF NOT EXISTS `attachment` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `attachment` (
+  `id` int(10) UNSIGNED NOT NULL,
   `parent_table` varchar(50) NOT NULL,
   `parent_id` int(10) UNSIGNED NOT NULL,
   `filename` varchar(255) NOT NULL,
-  `description` text NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `parent_table` (`parent_table`,`parent_id`)
+  `description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -66,13 +57,11 @@ CREATE TABLE IF NOT EXISTS `attachment` (
 -- Структура таблицы `capability`
 --
 
-DROP TABLE IF EXISTS `capability`;
-CREATE TABLE IF NOT EXISTS `capability` (
+CREATE TABLE `capability` (
   `name` varchar(50) NOT NULL,
   `object` varchar(50) NOT NULL,
   `object_id` int(10) UNSIGNED NOT NULL,
-  `value` text,
-  UNIQUE KEY `name` (`name`,`object`,`object_id`)
+  `value` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -81,20 +70,13 @@ CREATE TABLE IF NOT EXISTS `capability` (
 -- Структура таблицы `course`
 --
 
-DROP TABLE IF EXISTS `course`;
-CREATE TABLE IF NOT EXISTS `course` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `course` (
+  `id` int(10) UNSIGNED NOT NULL,
   `owner_id` int(10) UNSIGNED NOT NULL,
   `date_create` date NOT NULL,
-  `date_update` date NOT NULL,
+  `date_update` date DEFAULT NULL,
   `state` tinyint(3) UNSIGNED NOT NULL,
-  `order` int(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `owner_id` (`owner_id`),
-  KEY `state` (`state`),
-  KEY `date_create` (`date_create`),
-  KEY `date_update` (`date_update`),
-  KEY `order` (`order`)
+  `order` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -103,18 +85,16 @@ CREATE TABLE IF NOT EXISTS `course` (
 -- Структура таблицы `course_l10n`
 --
 
-DROP TABLE IF EXISTS `course_l10n`;
-CREATE TABLE IF NOT EXISTS `course_l10n` (
+CREATE TABLE `course_l10n` (
   `locale_id` char(2) NOT NULL,
   `parent_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(100) NOT NULL,
   `description` mediumtext,
   `state` int(11) NOT NULL,
   `brief` text,
-  PRIMARY KEY (`locale_id`,`parent_id`),
-  KEY `name` (`name`),
-  KEY `state` (`state`),
-  KEY `parent_id` (`parent_id`)
+  `title` varchar(255) NOT NULL,
+  `meta` mediumtext NOT NULL,
+  `url` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -123,14 +103,11 @@ CREATE TABLE IF NOT EXISTS `course_l10n` (
 -- Структура таблицы `exercise`
 --
 
-DROP TABLE IF EXISTS `exercise`;
-CREATE TABLE IF NOT EXISTS `exercise` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `exercise` (
+  `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(100) NOT NULL,
   `description` int(11) DEFAULT NULL,
-  `script` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
+  `script` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -139,14 +116,10 @@ CREATE TABLE IF NOT EXISTS `exercise` (
 -- Структура таблицы `lesson`
 --
 
-DROP TABLE IF EXISTS `lesson`;
-CREATE TABLE IF NOT EXISTS `lesson` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `lesson` (
+  `id` int(10) UNSIGNED NOT NULL,
   `course_id` int(10) UNSIGNED NOT NULL,
-  `order` int(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `course_id` (`course_id`),
-  KEY `order` (`order`)
+  `order` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -155,14 +128,11 @@ CREATE TABLE IF NOT EXISTS `lesson` (
 -- Структура таблицы `lesson_l10n`
 --
 
-DROP TABLE IF EXISTS `lesson_l10n`;
-CREATE TABLE IF NOT EXISTS `lesson_l10n` (
+CREATE TABLE `lesson_l10n` (
   `locale_id` char(2) NOT NULL,
   `parent_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
-  `description` mediumtext NOT NULL,
-  UNIQUE KEY `locale_id` (`locale_id`,`parent_id`),
-  KEY `parent_id` (`parent_id`)
+  `description` mediumtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32;
 
 -- --------------------------------------------------------
@@ -171,8 +141,7 @@ CREATE TABLE IF NOT EXISTS `lesson_l10n` (
 -- Структура таблицы `setup`
 --
 
-DROP TABLE IF EXISTS `setup`;
-CREATE TABLE IF NOT EXISTS `setup` (
+CREATE TABLE `setup` (
   `name` varchar(30) NOT NULL,
   `value` longtext NOT NULL,
   `desc` text NOT NULL
@@ -184,17 +153,12 @@ CREATE TABLE IF NOT EXISTS `setup` (
 -- Структура таблицы `stage`
 --
 
-DROP TABLE IF EXISTS `stage`;
-CREATE TABLE IF NOT EXISTS `stage` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `stage` (
+  `id` int(10) UNSIGNED NOT NULL,
   `lesson_id` int(10) UNSIGNED NOT NULL,
   `exercise_id` int(10) UNSIGNED NOT NULL,
   `order` int(10) UNSIGNED NOT NULL,
-  `settings` mediumtext NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `lesson_id` (`lesson_id`),
-  KEY `order` (`order`),
-  KEY `exercise_id` (`exercise_id`)
+  `settings` mediumtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -203,16 +167,133 @@ CREATE TABLE IF NOT EXISTS `stage` (
 -- Структура таблицы `stage_l10n`
 --
 
-DROP TABLE IF EXISTS `stage_l10n`;
-CREATE TABLE IF NOT EXISTS `stage_l10n` (
+CREATE TABLE `stage_l10n` (
   `locale_id` char(2) NOT NULL,
   `parent_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
-  `description` mediumtext NOT NULL,
-  UNIQUE KEY `locale_id` (`locale_id`,`parent_id`),
-  KEY `parent_id` (`parent_id`)
+  `description` mediumtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Индексы сохранённых таблиц
+--
+
+--
+-- Индексы таблицы `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `login` (`login`,`password`),
+  ADD KEY `name` (`name`),
+  ADD KEY `state` (`state`);
+
+--
+-- Индексы таблицы `attachment`
+--
+ALTER TABLE `attachment`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `parent_table` (`parent_table`,`parent_id`);
+
+--
+-- Индексы таблицы `capability`
+--
+ALTER TABLE `capability`
+  ADD UNIQUE KEY `name` (`name`,`object`,`object_id`);
+
+--
+-- Индексы таблицы `course`
+--
+ALTER TABLE `course`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `owner_id` (`owner_id`),
+  ADD KEY `state` (`state`),
+  ADD KEY `date_create` (`date_create`),
+  ADD KEY `date_update` (`date_update`),
+  ADD KEY `order` (`order`);
+
+--
+-- Индексы таблицы `course_l10n`
+--
+ALTER TABLE `course_l10n`
+  ADD PRIMARY KEY (`locale_id`,`parent_id`),
+  ADD UNIQUE KEY `url_2` (`url`),
+  ADD KEY `name` (`name`),
+  ADD KEY `state` (`state`),
+  ADD KEY `parent_id` (`parent_id`),
+  ADD KEY `url` (`url`) USING BTREE;
+
+--
+-- Индексы таблицы `exercise`
+--
+ALTER TABLE `exercise`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Индексы таблицы `lesson`
+--
+ALTER TABLE `lesson`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `course_id` (`course_id`),
+  ADD KEY `order` (`order`);
+
+--
+-- Индексы таблицы `lesson_l10n`
+--
+ALTER TABLE `lesson_l10n`
+  ADD UNIQUE KEY `locale_id` (`locale_id`,`parent_id`),
+  ADD KEY `parent_id` (`parent_id`);
+
+--
+-- Индексы таблицы `stage`
+--
+ALTER TABLE `stage`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `lesson_id` (`lesson_id`),
+  ADD KEY `order` (`order`),
+  ADD KEY `exercise_id` (`exercise_id`);
+
+--
+-- Индексы таблицы `stage_l10n`
+--
+ALTER TABLE `stage_l10n`
+  ADD UNIQUE KEY `locale_id` (`locale_id`,`parent_id`),
+  ADD KEY `parent_id` (`parent_id`);
+
+--
+-- AUTO_INCREMENT для сохранённых таблиц
+--
+
+--
+-- AUTO_INCREMENT для таблицы `admin`
+--
+ALTER TABLE `admin`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT для таблицы `attachment`
+--
+ALTER TABLE `attachment`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT для таблицы `course`
+--
+ALTER TABLE `course`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT для таблицы `exercise`
+--
+ALTER TABLE `exercise`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT для таблицы `lesson`
+--
+ALTER TABLE `lesson`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT для таблицы `stage`
+--
+ALTER TABLE `stage`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
@@ -253,7 +334,6 @@ ALTER TABLE `stage`
 --
 ALTER TABLE `stage_l10n`
   ADD CONSTRAINT `stage_l10n_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `stage` (`id`);
-SET FOREIGN_KEY_CHECKS=1;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
