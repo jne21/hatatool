@@ -32,13 +32,13 @@ out( "CMS\Admin->save() - create mode" );
 out( "CMS\Admin->__construct()" );
 	$adm1n = new Admin($adminId);
 
-	if ($adm1n->description !== $admin_description) out( "Create Admin: Error saving admin->description" , true);
-	if ($adm1n->email       !== $admin_email)       out( "Create Admin: Error saving admin->email" , true);
-	if ($adm1n->login       !== $admin_login)       out( "Create Admin: Error saving admin->login" , true);
-	if ($adm1n->name        !== $admin_name)        out( "Create Admin: Error saving admin->name" , true);
-	if ($adm1n->password    !== Admin::passwordEncode($admin_password))  out( "Create Admin: Error saving admin->password" , true);
-	if ($adm1n->state       !== $admin_state)       out( "Create Admin: Error saving admin->state" , true);
-	if ($adm1n->rights      !== $admin_rights)      out( "Create Admin: Error saving admin->rights" , true);
+	compare($adm1n->description, $admin_description, "Create Admin: Error saving admin->description.");
+	compare($adm1n->email,    $admin_email,  "Create Admin: Error saving admin->email");
+	compare($adm1n->login,    $admin_login,  "Create Admin: Error saving admin->login");
+	compare($adm1n->name,     $admin_name,   "Create Admin: Error saving admin->name");
+	compare($adm1n->password, Admin::passwordEncode($admin_password),  "Create Admin: Error saving admin->password");
+	compare($adm1n->state,    $admin_state,  "Create Admin: Error saving admin->state");
+	compare($adm1n->rights,   $admin_rights, "Create Admin: Error saving admin->rights");
 
 	$adm1n_description  = 'Admin description 1';
 	$adm1n_email        = 'admin email 1';
@@ -62,16 +62,14 @@ out( "CMS\Admin->save() - update mode");
 
 	$adm2n = new Admin($adminId);
 
-#		out( "Passed: "; var_dump(Admin::passwordEncode($admin_password)); out( "Restored: "; var_dump($adm1n->password); out( PHP_EOL;
-
-	if ($adm2n->id          !== $adminId)           out( "Update Admin: Error saving admin->id" , true);
-	if ($adm2n->description !== $adm1n_description) out( "Update Admin: Error saving admin->description" , true);
-	if ($adm2n->email       !== $adm1n_email)       out( "Update Admin: Error saving admin->email" , true);
-	if ($adm2n->login       !== $adm1n_login)       out( "Update Admin: Error saving admin->login" , true);
-	if ($adm2n->name        !== $adm1n_name)        out( "Update Admin: Error saving admin->name" , true);
-	if ($adm2n->password    !== Admin::passwordEncode($adm1n_password)) out( "Update Admin: Error saving admin->password" , true);
-	if ($adm2n->state       !== $adm1n_state)       out( "Update Admin: Error saving admin->state" , true);
-	if ($adm2n->rights      !== $adm1n_rights)      out( "Update Admin: Error saving admin->rights" , true);
+	compare($adm2n->id,          $adminId,           "Update Admin: Error saving admin->id.");
+	compare($adm2n->description, $adm1n_description, "Update Admin: Error saving admin->description.");
+	compare($adm2n->email,       $adm1n_email,       "Update Admin: Error saving admin->email.");
+	compare($adm2n->login,       $adm1n_login,       "Update Admin: Error saving admin->login.");
+	compare($adm2n->name,        $adm1n_name,        "Update Admin: Error saving admin->name.");
+	compare($adm2n->password,    Admin::passwordEncode($adm1n_password), "Update Admin: Error saving admin->password.");
+	compare($adm2n->state,       $adm1n_state,       "Update Admin: Error saving admin->state.");
+	compare($adm2n->rights,      $adm1n_rights,      "Update Admin: Error saving admin->rights.");
 
 	unset($adm2n);
 
@@ -80,7 +78,7 @@ out( "CMS\Admin->save() - update mode");
 		out( "GetInstance Admin: Error getInstance({$adminId}) Not Found." , true);
 	}
 	elseif ($adm3n instanceof Admin) {
-		if ($adm3n->id !== $adminId)       out( "GetInstance Admin: Error getInstance({$adminId})" , true);
+		compare($adm3n->id, $adminId, "GetInstance Admin: Error getInstance({$adminId}).");
 	}
 	else {
 		out( "GetInstance Admin: Error getInstance({$adminId}) Wrong data type." , true);
@@ -95,14 +93,14 @@ out( "CMS\Admin->getList()");
 			if (array_key_exists($adminId, $list)) {
 				$adm5n = $list[$adminId];
 				if ($adm5n instanceof Admin) {
-					if ($adm5n->id          !== $adminId)           out( "Admin getList: Error getting admin->id" , true);
-					if ($adm5n->description !== $adm1n_description) out( "Admin getList: Error getting admin->description" , true);
-					if ($adm5n->email       !== $adm1n_email)       out( "Admin getList: Error getting admin->email" , true);
-					if ($adm5n->login       !== $adm1n_login)       out( "Admin getList: Error getting admin->login" , true);
-					if ($adm5n->name        !== $adm1n_name)        out( "Admin getList: Error getting admin->name" , true);
-					if ($adm5n->password    !== Admin::passwordEncode($adm1n_password)) out( "Admin getList: Error getting admin->password" , true);
-					if ($adm5n->state       !== $adm1n_state)       out( "Admin getList: Error getting admin->state" , true);
-					if ($adm5n->rights      !== $adm1n_rights)      out( "Admin getList: Error getting admin->rights" , true);
+					compare($adm5n->id,          $adminId,           "Admin getList: Error getting admin->id");
+					compare($adm5n->description, $adm1n_description, "Admin getList: Error getting admin->description");
+					compare($adm5n->email,       $adm1n_email,       "Admin getList: Error getting admin->email");
+					compare($adm5n->login,       $adm1n_login,       "Admin getList: Error getting admin->login");
+					compare($adm5n->name,        $adm1n_name,        "Admin getList: Error getting admin->name");
+					compare($adm5n->password,    Admin::passwordEncode($adm1n_password), "Admin getList: Error getting admin->password");
+					compare($adm5n->state,       $adm1n_state,       "Admin getList: Error getting admin->state");
+					compare($adm5n->rights,      $adm1n_rights,      "Admin getList: Error getting admin->rights");
 				}
 				unset($adm5n);
 			}
@@ -126,4 +124,4 @@ out( "CMS\Admin->delete()");
 		out( "Delete Admin: Error delete({$adminId})" , true);
 	}
 
-	out( "... passed");
+	out(PHP_EOL."... passed".PHP_EOL);
