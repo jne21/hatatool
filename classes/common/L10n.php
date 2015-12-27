@@ -105,4 +105,3 @@ class L10n {
 		$db->query("DELETE FROM `".$db->realEscapeString($parentTable)."` WHERE `parent_id`=".$db->escape($parentId));
 	} 
 }
-?>

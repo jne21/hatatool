@@ -1,5 +1,6 @@
-<?
+<?php
 namespace system;
+
 class ExceptionHandler {
 
 	public $debug = FALSE;
