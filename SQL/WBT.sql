@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Дек 27 2015 г., 04:04
+-- Время создания: Дек 28 2015 г., 10:13
 -- Версия сервера: 10.0.21-MariaDB
 -- Версия PHP: 5.6.15
 
@@ -106,7 +106,7 @@ CREATE TABLE `course_l10n` (
 CREATE TABLE `exercise` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(100) NOT NULL,
-  `description` int(11) DEFAULT NULL,
+  `description` text,
   `script` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -119,6 +119,7 @@ CREATE TABLE `exercise` (
 CREATE TABLE `lesson` (
   `id` int(10) UNSIGNED NOT NULL,
   `course_id` int(10) UNSIGNED NOT NULL,
+  `name` varchar(200) NOT NULL,
   `order` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -132,7 +133,11 @@ CREATE TABLE `lesson_l10n` (
   `locale_id` char(2) NOT NULL,
   `parent_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
-  `description` mediumtext NOT NULL
+  `brief` text NOT NULL,
+  `description` mediumtext NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `meta` text NOT NULL,
+  `url` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32;
 
 -- --------------------------------------------------------
@@ -171,7 +176,10 @@ CREATE TABLE `stage_l10n` (
   `locale_id` char(2) NOT NULL,
   `parent_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
-  `description` mediumtext NOT NULL
+  `description` mediumtext NOT NULL,
+  `meta` text NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `url` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -241,8 +249,9 @@ ALTER TABLE `lesson`
 -- Индексы таблицы `lesson_l10n`
 --
 ALTER TABLE `lesson_l10n`
-  ADD UNIQUE KEY `locale_id` (`locale_id`,`parent_id`),
-  ADD KEY `parent_id` (`parent_id`);
+  ADD PRIMARY KEY (`locale_id`,`parent_id`) USING BTREE,
+  ADD KEY `parent_id` (`parent_id`),
+  ADD KEY `url` (`url`(191));
 
 --
 -- Индексы таблицы `stage`
@@ -258,7 +267,8 @@ ALTER TABLE `stage`
 --
 ALTER TABLE `stage_l10n`
   ADD UNIQUE KEY `locale_id` (`locale_id`,`parent_id`),
-  ADD KEY `parent_id` (`parent_id`);
+  ADD KEY `parent_id` (`parent_id`),
+  ADD KEY `url` (`url`);
 
 --
 -- AUTO_INCREMENT для сохранённых таблиц
