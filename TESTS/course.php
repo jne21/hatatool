@@ -7,12 +7,7 @@ use WBT\CourseL10n;
 use common\Registry;
 
 
-$owner = new Admin;
-$owner->login = "unittest-".date('YmdHis');
-$owner->password = 'qwerty';
-$owner->state = 0;
-$owner->rights = 0;
-$owner->save();
+$owner = createAdmin();
 
 $course = new Course;
 
@@ -95,7 +90,7 @@ out("WBT\Course->save() update");
 
 	unset($course2);
 
-out("WBT\Course->save() getList");
+out("WBT\Course::getList");
 
 	$list = Course::getList();
 	if (is_array($list)) {
@@ -108,7 +103,7 @@ out("WBT\Course->save() getList");
 
 					foreach ($l10n as $localeId=>$localeData) {
 						foreach ($localeData as $field=>$value) {
-							compare($course3->l10n->get($field, $localeId), $value, "Invalid ($id)->l10n($locale, $field) after update.");
+							compare($course3->l10n->get($field, $localeId), $value, "getList: Invalid ($id)->l10n($locale, $field).");
 						}
 					}
 
@@ -157,3 +152,28 @@ else {
 	Admin::delete($owner->id);
 
 out(PHP_EOL.'... passed.'.PHP_EOL);
+
+function createCourse($ownerId) {
+	$course = new Course;
+
+	$course->ownerId = $ownerId;
+	$course->state   = 8;
+	$course->rights  = 1;
+
+	$locales = Registry::getInstance()->get('locales');
+
+	foreach (array_keys($locales) as $locale) {
+		$l10n[$locale] = [
+				'brief'       => 'brief 1 '.$locale,
+				'description' => 'description 1'.$locale,
+				'meta'        => 'meta 1'.$locale,
+				'name'        => 'name 1'.$locale,
+				'state'       => 0,
+				'title'       => 'title 1'.$locale,
+				'url'         => 'url 1'.rand().' '.$locale
+		];
+		$course->l10n->loadDataFromArray($locale, $l10n[$locale]);
+	}
+	$course->save();
+	return $course;
+}

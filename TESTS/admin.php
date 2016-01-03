@@ -125,3 +125,14 @@ out( "CMS\Admin->delete()");
 	}
 
 	out(PHP_EOL."... passed".PHP_EOL);
+
+
+function createAdmin() {
+	$admin = new Admin;
+	$admin->login = "unittest-".date('YmdHis');
+	$admin->password = 'qwerty';
+	$admin->state = 0;
+	$admin->rights = 0;
+	$admin->save();
+	return $admin;
+}
