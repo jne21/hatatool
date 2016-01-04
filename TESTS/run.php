@@ -11,6 +11,7 @@ echo 'START UNIT TESTS'. PHP_EOL . PHP_EOL;
 	require('exercise.php');
 	require('course.php');
 	require('lesson.php');
+	require('stage.php');
 echo $hr;
 
 if ($registry->get('test_error')) {

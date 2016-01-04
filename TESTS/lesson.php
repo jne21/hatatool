@@ -73,7 +73,7 @@ out("WBT\Lesson->__construct($id)");
 		}
 	}
 
-out("WBT\Course->save() update");
+out("WBT\Lesson->save() update");
 
 	$lesson1->save();
 	unset($lesson1);

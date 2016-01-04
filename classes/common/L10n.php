@@ -12,6 +12,15 @@ class L10n {
 		$data
 	;
 
+	function __construct($tableName, $parentId = NULL) {
+		if ($id = intval($parentId)) {
+			$this->parentId = $id;
+		}
+		foreach (self::load(intval($id), $tableName) as $item) {
+			$this->loadDataFromArray($item['locale_id'], $item);
+		}
+	}
+	
 	static function load($parentId=NULL, $parentTable) {
 		$registry = Registry::getInstance();
 		$db = $registry->get(self::DB);

@@ -6,7 +6,7 @@ use WBT\Exercise;
 
 $exercise = new Exercise();
 
-$exercise->name        = $name        = "unit test";
+$exercise->name        = $name        = "unit test ".date('Y-m-d H:i:s');
 $exercise->description = $description = "unit test description";
 $exercise->script      = $script      = "unit_test_script.php";
 
@@ -81,3 +81,14 @@ else {
 }
 
 out(PHP_EOL.'... passed.'.PHP_EOL);
+
+function createExercise() {
+	$exercise = new Exercise();
+
+	$exercise->name        = $name        = "unit test ".date('Y-m-d H:i:s');
+	$exercise->description = $description = "unit test description";
+	$exercise->script      = $script      = "unit_test_script.php";
+	$exercise->save();
+
+	return $exercise;
+}

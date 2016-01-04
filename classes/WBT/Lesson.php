@@ -57,13 +57,13 @@ final class Lesson {
 			);
 		}
 		else {
-			$this->num = self::getNextOrderIndex();
+			$this->order = self::getNextOrderIndex();
 			$db->insert(
 					self::TABLE,
 					[
 							'course_id'             => $this->courseId,
 							'name'                  => $this->name,
-							self::ORDER_FIELD_NAME  => self::getNextOrderIndex()
+							self::ORDER_FIELD_NAME  => $this->order
 					]
 			) or die($db->lastError);
 			$this->id = $db->insertId();
