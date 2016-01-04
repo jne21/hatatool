@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Дек 28 2015 г., 10:13
+-- Время создания: Янв 04 2016 г., 18:31
 -- Версия сервера: 10.0.21-MariaDB
 -- Версия PHP: 5.6.15
 
@@ -161,6 +161,7 @@ CREATE TABLE `setup` (
 CREATE TABLE `stage` (
   `id` int(10) UNSIGNED NOT NULL,
   `lesson_id` int(10) UNSIGNED NOT NULL,
+  `name` varchar(100) NOT NULL,
   `exercise_id` int(10) UNSIGNED NOT NULL,
   `order` int(10) UNSIGNED NOT NULL,
   `settings` mediumtext NOT NULL
@@ -176,6 +177,7 @@ CREATE TABLE `stage_l10n` (
   `locale_id` char(2) NOT NULL,
   `parent_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
+  `brief` text NOT NULL,
   `description` mediumtext NOT NULL,
   `meta` text NOT NULL,
   `title` varchar(100) NOT NULL,
@@ -224,11 +226,10 @@ ALTER TABLE `course`
 --
 ALTER TABLE `course_l10n`
   ADD PRIMARY KEY (`locale_id`,`parent_id`),
-  ADD UNIQUE KEY `url_2` (`url`),
+  ADD UNIQUE KEY `url` (`url`) USING BTREE,
   ADD KEY `name` (`name`),
   ADD KEY `state` (`state`),
-  ADD KEY `parent_id` (`parent_id`),
-  ADD KEY `url` (`url`) USING BTREE;
+  ADD KEY `parent_id` (`parent_id`);
 
 --
 -- Индексы таблицы `exercise`
@@ -278,7 +279,7 @@ ALTER TABLE `stage_l10n`
 -- AUTO_INCREMENT для таблицы `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=143;
 --
 -- AUTO_INCREMENT для таблицы `attachment`
 --
@@ -288,22 +289,22 @@ ALTER TABLE `attachment`
 -- AUTO_INCREMENT для таблицы `course`
 --
 ALTER TABLE `course`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
 --
 -- AUTO_INCREMENT для таблицы `exercise`
 --
 ALTER TABLE `exercise`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 --
 -- AUTO_INCREMENT для таблицы `lesson`
 --
 ALTER TABLE `lesson`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 --
 -- AUTO_INCREMENT для таблицы `stage`
 --
 ALTER TABLE `stage`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
@@ -318,7 +319,7 @@ ALTER TABLE `course`
 -- Ограничения внешнего ключа таблицы `course_l10n`
 --
 ALTER TABLE `course_l10n`
-  ADD CONSTRAINT `course_l10n_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `course` (`id`);
+  ADD CONSTRAINT `course_l10n_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `course` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `lesson`
@@ -330,7 +331,7 @@ ALTER TABLE `lesson`
 -- Ограничения внешнего ключа таблицы `lesson_l10n`
 --
 ALTER TABLE `lesson_l10n`
-  ADD CONSTRAINT `lesson_l10n_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `lesson` (`id`);
+  ADD CONSTRAINT `lesson_l10n_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `lesson` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `stage`
@@ -343,7 +344,7 @@ ALTER TABLE `stage`
 -- Ограничения внешнего ключа таблицы `stage_l10n`
 --
 ALTER TABLE `stage_l10n`
-  ADD CONSTRAINT `stage_l10n_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `stage` (`id`);
+  ADD CONSTRAINT `stage_l10n_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `stage` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
