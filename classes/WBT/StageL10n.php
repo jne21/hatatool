@@ -30,7 +30,7 @@ class StageL10n extends L10n {
 		$result = [];
 		if (is_array($idList) && count($idList)) {
 			$ids = array_map('intval', $idList);
-			foreach($l = parent::loadByParentIds($ids, self::TABLE) as $parentId=>$l10nData) {
+			foreach($l = parent::loadByParentIds(self::TABLE, $ids) as $parentId=>$l10nData) {
 				$l10n = new StageL10n();
 				$l10n->parentId = $parentId;
 				foreach ($l10nData as $localeId=>$l10nItem) {

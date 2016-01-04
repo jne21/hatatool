@@ -14,15 +14,10 @@ class CourseL10n extends L10n {
 		$parentId
 	;
 
-	function __construct($parentId = NULL) {
-		if ($id = intval($parentId)) {
-			$this->parentId = $id;
-		}
-		foreach (parent::load(intval($id), self::TABLE) as $item) {
-			$this->loadDataFromArray($item['locale_id'], $item);
-		}
+	function __construct($parentId=NULL) {
+		parent::__construct(self::TABLE, $parentId);
 	}
-
+	
 	function loadDataFromArray($localeId, $array) {
 		$this->set('name',        $array['name'],          $localeId);
 		$this->set('meta',        $array['meta'],          $localeId);
@@ -37,7 +32,7 @@ class CourseL10n extends L10n {
 		$result = [];
 		if (is_array($idList) && count($idList)) {
 			$ids = array_map('intval', $idList);
-			foreach($l = parent::loadByParentIds($ids, self::TABLE) as $parentId=>$l10nData) {
+			foreach($l = parent::loadByParentIds(self::TABLE, $ids) as $parentId=>$l10nData) {
 				$l10n = new CourseL10n();
 				$l10n->parentId = $parentId;
 				foreach ($l10nData as $localeId=>$l10nItem) {
