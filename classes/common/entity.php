@@ -3,6 +3,13 @@ namespace common;
 
 trait entity {
 
+	/**
+	 * Ручная (пользовательская сортировка записей)
+	 * @param $orderedIds Array Массив первичных ключей и значения сортирующего поля.
+	 * @param $table String Идентификатор таблицы БД. По умолчанию задаётся внешней константой TABLE основного класса
+	 * @param $fieldName String Имя сортирующего поля
+	 * @return NULL
+	 **/
 	static function renumberAll($orderedIds, $table=NULL, $fieldName=self::ORDER_FIELD_NAME) {
 		$db = Registry::getInstance()->get(self::DB);
 		foreach($orderedIds as $index=>$id) {
@@ -16,6 +23,13 @@ trait entity {
 		}
 	}
 
+	/**
+	 * Установка значения атрибута в БД без создания экземпляра объекта.
+	 * @param $pKey Int Значение первичного ключа.
+	 * @param $field Идентификатор поля таблицы БД
+	 * @param $value Новое значение
+	 * @return NULL
+	 **/
 	static function updateValue($pKey, $field, $value) {
 		if ($id = intval($pKey)) {
 			$db = Registry::getInstance()->get(self::DB);
@@ -27,15 +41,32 @@ trait entity {
 		}
 	}
 
+	/**
+	 * Установка значения атрибута show (видимость записи) в БД без создания экземпляра объекта.
+	 * @param $id Int Значение первичного ключа.
+	 * @param $action Int Новое значение (1 или 0)
+	 * @return NULL
+	 **/
 	static function toggle($id, $action) {
 		self::updateValue($id, 'show', intval($action));
 	}
 
+	/**
+	 * Получение значения сортирующего поля при добавлении новой записи в БД.
+	 * @param $whereCondition String Фраза для WHERE, если требуется фильтрация данных.
+	 * @param $fieldName String Имя сортирующего поля
+	 * @return NULL
+	 **/
 	static function getNextOrderIndex($whereCondition = NULL, $fieldName=self::ORDER_FIELD_NAME) {
 		$db = Registry::getInstance()->get(self::DB);
 		return $db->result($db->query("SELECT IFNULL(MAX(`".$db->realEscapeString($fieldName)."`), 0)+1 FROM `".self::TABLE."`".($whereCondition ? " WHERE $whereCondition" : '')), 0, 0);
 	}
 
+	/**
+	 * Translit decoder function creates data for making long SEO-friendly URLs.
+	 * @param string $s
+	 * @return string
+	 */
 	static function transURL($s) {
 		$L['from'] = array(
 			'Ж', 'Ц', 'Ч', 'Ш', 'Щ', 'Ы', 'Ю', 'Я', 'Ї',

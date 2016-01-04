@@ -1,0 +1,65 @@
+<?
+namespace WBT;
+
+use common\L10n;
+use common\Registry;
+
+class LessonL10n extends L10n {
+	const
+		TABLE = 'lesson_l10n'
+	;
+
+	public
+		$id,
+		$parentId
+	;
+
+	function __construct($parentId = NULL) {
+		if ($id = intval($parentId)) {
+			$this->parentId = $id;
+		}
+		foreach (parent::load(intval($id), self::TABLE) as $item) {
+			$this->loadDataFromArray($item['locale_id'], $item);
+		}
+	}
+
+	function loadDataFromArray($localeId, $array) {
+		$this->set('name',        $array['name'],          $localeId);
+		$this->set('meta',        $array['meta'],          $localeId);
+		$this->set('description', $array['description'],   $localeId);
+		$this->set('brief',       $array['brief'],         $localeId);
+		$this->set('url',         $array['url'],           $localeId);
+		$this->set('title',       $array['title'],         $localeId);
+	}
+
+	static function getListByIds($idList) {
+		$result = [];
+		if (is_array($idList) && count($idList)) {
+			$ids = array_map('intval', $idList);
+			foreach($l = parent::loadByParentIds($ids, self::TABLE) as $parentId=>$l10nData) {
+				$l10n = new LessonL10n();
+				$l10n->parentId = $parentId;
+				foreach ($l10nData as $localeId=>$l10nItem) {
+					$l10n->loadDataFromArray($localeId, $l10nItem);
+				}
+				$result[$parentId] = $l10n;
+			}
+		}
+		return $result;
+	}
+
+	function save() {
+		foreach(array_keys(Registry::getInstance()->get('locales')) as $locale) {
+			$data[$locale] = [
+				'name'        => $this->get('name',        $locale),
+				'meta'        => $this->get('meta',        $locale),
+				'description' => $this->get('description', $locale),
+				'brief'       => $this->get('brief',       $locale),
+				'url'         => $this->get('url',         $locale),
+				'title'       => $this->get('title',       $locale)
+			];
+		}
+		parent::saveData($this->parentId, self::TABLE, $data);
+	}
+
+}
