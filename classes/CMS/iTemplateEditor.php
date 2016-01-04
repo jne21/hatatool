@@ -3,9 +3,8 @@ namespace CMS;
 
 interface iTemplateEditor {
 
-	static function delete($templateID);
+	public abstract function save();
+	public abstract static function delete($templateID);
+	public abstract static function getList();
 
-	function save();
-
-	static function getList();
 }
