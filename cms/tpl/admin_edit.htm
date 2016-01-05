@@ -1,0 +1,30 @@
+<h1 class="pagetitle">[pTitle]</h1>
+<form method="post">
+	<table class="grid shadow" align="center">
+		<tbody>
+			<tr>
+				<th>Логин:</td>
+				<td><input name="login" maxlength="21" value="{login}" style="width:100px" /></td>
+			</tr>
+			<tr>
+				<th>Пароль:</td>
+				<td><input name="pw" maxlength="21" value="" style="width:100px" /></td>
+			</tr>
+			<tr>
+				<th>Права:</td>
+				<td>
+					<select name="rights">
+						<option value="">=== Выберите ===</option>
+						{rights}
+					</select>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<p align="center">
+		<input type="submit" value="Сохранить" />
+		<br /><br />
+		<a href="admin.php">Вернуться в список администраторов</a>
+	</p>
+	<input type="hidden" name="action" value="save" />
+</form>

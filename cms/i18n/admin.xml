@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<i18n>
+	<token xml:id="title">
+		<uk>Адміністратори</uk>
+		<ru>Администраторы</ru>
+	</token>
+	<token xml:id="append_mode">
+		<uk>Додання адміністратора</uk>
+		<ru>Добавление администратора</ru>
+	</token>
+	<token xml:id="update_mode">
+		<uk>Редагування адміністратора</uk>
+		<ru>Редактирование администратора</ru>
+	</token>
+</i18n>

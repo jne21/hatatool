@@ -1,0 +1,28 @@
+<h1 class="pagetitle">{pTitle}</h1>
+<div style="width: 900px; margin: 0 auto;">
+	<a name="top"></a>
+	<p align="left"><a href="template_edit.php">Новый шаблон</a> &nbsp; &nbsp; &nbsp; <a href="#bottom">В конец</a></p>
+	<table class="grid shadow" width="100%" id="templates">
+		<thead>
+			<tr>
+				<th width="*">Название</th>
+				<th width="200">ID: <input type="text" id="searchTemplate" value="" style="width:150px;" maxlength="20" /></th>
+				<th width="40">&nbsp;</th>
+			</tr>
+		</thead>
+		<tbody>
+			{items}
+		</tbody>
+	</table>
+	<br /><a href="template_edit.php">Новый шаблон</a> &nbsp; &nbsp; &nbsp; <a href="#top">В начало</a></p>
+	<a name="bottom"></a>
+</div>
+<br /><br />
+<script type="text/javascript">
+$('#searchTemplate').bind('keyup', function(e) {
+	var se = this.value;
+	$('.tst').each(function(){
+		$(this.parentNode.parentNode).toggle(this.textContent.indexOf(se)>=0);
+	});
+});
+</script>

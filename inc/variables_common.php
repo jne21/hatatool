@@ -1,4 +1,7 @@
-<?
+<?php
+	use CMS\Page;
+	use CMS\Renderer;
+
 	require($site_include_path.'removedir.php');
 
 	if (
@@ -117,4 +120,3 @@
 		echo '<pre>'.print_r($var, true).'</pre>';
 		if ($stop) die();
 	}
-?>
