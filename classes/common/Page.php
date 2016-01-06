@@ -1,8 +1,9 @@
 <?php
 
-namespace CMS;
+namespace common;
 
-use \common\Registry;
+use common\Registry;
+use common\Template;
 
 class Page {
 
@@ -15,20 +16,25 @@ class Page {
 		MODE_NORMAL = 0;
 
 	public
+		$content,
+		$breadcrumbs,
+		$h1,
+		$mode,
+		$title,
+		$metaTags,
 		$headers = [];
 
-	function __construct($url=NULL, $forceHidden=FALSE, $alternativePage = '404') {
-		$registry = Registry::getInstance();
-		$db = $registry->get(self::DB);
+	function __construct($url=NULL, $forceHidden=FALSE, $alternativeUrl = '404') {
 
 		if ($url) {
 
+			$registry = Registry::getInstance();
+			$db = $registry->get(self::DB);
+				
 			$rsp = $db->query(
 "SELECT * FROM `".self::TABLE."` WHERE `url`=".$db->escape($url).($forceHidden ? '': ' AND `show`<>0')
 			);
 
-//$this->db->escape(implode('/', $segment))
-//die ("[".$db->escape(implode('/', $segment))."]");
 			if ($sap = $db->fetch($rsp)) {
 				$this->headers = array (
 					'HTTP/1.1 200 OK' => TRUE,
@@ -37,12 +43,10 @@ class Page {
 
 				$this->content             = $sap['html'];
 				$this->breadcrumbs         = $sap['breadcrumbs'];
-				$this->h1                  = $sap['title'];
-				$this->pageMode            = $sap['popup'];
-				$this->metaTitle           = $sap['meta_title'];
+				$this->h1                  = $sap['h1'];
+				$this->mode                = $sap['mode'];
+				$this->title               = $sap['title'];
 				$this->metaTags            = $sap['meta'];
-				$this->has_left_column     = $sap['has_left_column'];
-				$this->left                = $sap['html_left'];
 			}
 			else {
 				$this->headers = array (
@@ -50,16 +54,14 @@ class Page {
 					'Status: 404 Not found'  => TRUE
 				);
 
-				$rsp = $db->query("SELECT * FROM `".self::TABLE."` WHERE `url`=".$db->escape($alternativePage)) or die('Page: '.$db->lastError);
+				$rsp = $db->query("SELECT * FROM `".self::TABLE."` WHERE `url`=".$db->escape($alternativeUrl));
 				if ($sap = $db->fetch($rsp)) {
 					$this->content             = $sap['html'];
 					$this->breadcrumbs         = $sap['breadcrumbs'];
 					$this->h1                  = $sap['title'];
-					$this->pageMode            = $sap['popup'];
-					$this->metaTitle          = $sap['meta_title'];
-					$this->metaTags           = $sap['meta'];
-					$this->has_left_column     = $sap['has_left_column'];
-					$this->left                = $sap['html_left'];
+					$this->mode                = $sap['mode'];
+					$this->title               = $sap['meta_title'];
+					$this->metaTags            = $sap['meta'];
 
 					$this->renderProperty('content_main', array ('original_url' => $url));
 				}
@@ -71,7 +73,7 @@ class Page {
 	}
 
 	function renderProperty($propertyName, $data) {
-		$tpl = new Template($this->$propertyName, Template::SOURCE_VARIABLE);
+		$tpl = new Template($this->$propertyName);
 		$this->$propertyName = $tpl->apply($data);
 	}
 }

@@ -11,6 +11,11 @@ class TemplateFile extends Template {
 	 * @param string $fileSpec полная спецификация имени файла.
 	 */
 	function __construct($fileSpec) {
-		$this->tpl = file_get_contents($fileSpec);
+		try {
+			$tpl = file_get_contents($fileSpec);
+		} catch (\Exception $e) {
+		    echo 'Exception: ',  $e->getMessage(), "\n";
+		}
+		$this->setContent($tpl);
 	}
 }

@@ -1,13 +1,12 @@
 <?
 	require('inc/authent.php');
 
-	use CMS\Page;
-	use CMS\Renderer;
+	use common\Page;
+	use CMS\RendererCMS as Renderer;
 
 	$pTitle = "Керуючий інтерфейс";
 
-	$page = new Page;
-	$renderer = new Renderer($page);
+	$renderer = new Renderer(Page::MODE_NORMAL);
 	$renderer->output();
 
 ?>
