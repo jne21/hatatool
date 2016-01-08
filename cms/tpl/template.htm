@@ -1,7 +1,6 @@
 <h1 class="pagetitle">{pTitle}</h1>
-<div style="width: 900px; margin: 0 auto;">
-	<a name="top"></a>
-	<p align="left"><a href="template_edit.php">Новый шаблон</a> &nbsp; &nbsp; &nbsp; <a href="#bottom">В конец</a></p>
+<div style="width: 900px; margin: 0 auto;" id="pagetop">
+	<p align="left"><a href="template_edit.php">Новый шаблон</a> &nbsp; &nbsp; &nbsp; <a href="#pagebottom">В конец</a></p>
 	<table class="grid shadow" width="100%" id="templates">
 		<thead>
 			<tr>
@@ -14,9 +13,9 @@
 			{items}
 		</tbody>
 	</table>
-	<br /><a href="template_edit.php">Новый шаблон</a> &nbsp; &nbsp; &nbsp; <a href="#top">В начало</a></p>
-	<a name="bottom"></a>
+	<br /><p><a href="template_edit.php">Новый шаблон</a> &nbsp; &nbsp; &nbsp; <a href="#pagetop">В начало</a></p>
 </div>
+<div id="pagebottom"></div>
 <br /><br />
 <script type="text/javascript">
 $('#searchTemplate').bind('keyup', function(e) {

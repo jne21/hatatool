@@ -1,7 +1,7 @@
 <h1 class="pagetitle">{pTitle}</h1>
 <div style="width: 97%; margin: 0 auto;">
 	<form method="post" name="n">
-		<table class="grid shadow" width="100%">
+		<table class="grid shadow" style="width: 100%;">
 			<tbody>
 				<tr><th>Название шаблона:</th><td><input name="name" maxlength="100" style="width:400px" value="{name}"/></td></tr>
 				<tr><th>Идентификатор:</th><td><input name="alias" maxlength="100" style="width:400px" value="{alias}"/></td></tr>
@@ -23,7 +23,7 @@
 {attachment_list}
 </div>
 <script type="text/javascript" src="edit_area/edit_area_full.js"></script>
-<script language="Javascript" type="text/javascript">
+<script type="text/javascript">
 $(document).ready(function() {
 	editAreaLoader.init({
 		id                     : "html",
