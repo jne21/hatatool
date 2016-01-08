@@ -75,5 +75,27 @@ class Page {
 	function renderProperty($propertyName, $data) {
 		$tpl = new Template($this->$propertyName);
 		$this->$propertyName = $tpl->apply($data);
+		return $this;
 	}
+
+	/**
+	 * Standard setter
+	 * @param string $propertyName
+	 * @param mixed $value
+	 * @return object
+	 */
+	function set($propertyName, $value) {
+	    $this->$propertyName = $value;
+	    return $this;
+	}
+
+	/**
+	 * Standard getter
+	 * @param string $propertyName
+	 * @return mixed
+	 */
+	function get($propertyName) {
+	    return $this->$propertyName;
+	}
+	
 }
