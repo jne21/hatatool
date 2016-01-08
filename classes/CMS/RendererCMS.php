@@ -24,11 +24,6 @@ class RendererCMS extends \common\Renderer {
 		$tpl = new TemplateFile($registry->get('cms_template_path').$templateFileName);
 		parent::__construct($tpl->getContent(), $page);
 
-		$this->updateContent(
-			array(
-				'h1' => $this->page->h1,
-			)
-		);
 	}
 
 	function output() {
@@ -36,7 +31,9 @@ class RendererCMS extends \common\Renderer {
 		// Render Globals
 		$tplMainMenu = new TemplateFile($registry->get('cms_template_path').'main_menu.htm');
 		$this->updateContent([
-			'main_menu'      => $tplMainMenu->apply([
+				'h1' => $this->page->h1,
+		        'title' => $this->page->title,
+		        'main_menu'      => $tplMainMenu->apply([
 						'admin'=>TRUE,
 						'operator'=>TRUE
 					]),
