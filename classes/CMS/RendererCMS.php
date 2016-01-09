@@ -11,8 +11,8 @@ class RendererCMS extends \common\Renderer
     function __construct ($pageMode)
     {
         $registry = Registry::getInstance();
-        $page = new Page();
-        $page->mode = $pageMode;
+        $this->page = new Page();
+        $this->page->mode = $pageMode;
         switch ($pageMode) {
             case Page::MODE_POPUP:
                 $templateFileName = 'popup.htm';
@@ -23,27 +23,24 @@ class RendererCMS extends \common\Renderer
         }
         $tpl = new TemplateFile(
                 $registry->get('cms_template_path') . $templateFileName);
-        parent::__construct($tpl->getContent(), $page);
+        $this->content = $tpl->getContent();
     }
 
     function output ()
     {
         $registry = Registry::getInstance();
-        // Render Globals
         $tplMainMenu = new TemplateFile(
                 $registry->get('cms_template_path') . 'main_menu.htm');
         $this->updateContent(
                 [
-                        'title' => $this->page->title,
-                        'content' => $this->page->content,
                         'h1' => $this->page->h1,
                         'main_menu' => $tplMainMenu->apply(
                                 [
                                         'admin' => TRUE,
                                         'operator' => TRUE
                                 ]),
-                        'year_now' => date('Y'),
-                        'site_root' => $registry->get('site_root')
+                        // Render Globals
+                        'year_now' => date('Y')
                 ]);
         parent::output();
     }

@@ -7,6 +7,8 @@
 	$pTitle = "Керуючий інтерфейс";
 
 	$renderer = new Renderer(Page::MODE_NORMAL);
+	$renderer->page->title = $pTitle;
+
 	$renderer->output();
 
 ?>
