@@ -18,24 +18,27 @@ class Renderer {
 		    $this->page = $page;
             $this->loadPage();
 	    }
+	    else {
+	        $this->page = new Page();
+	    }
 	}
 
 	function loadPage() {
         $registry = Registry::getInstance();
 	    $this->updateContent([
-	            'content'  => $this->page->content,
-	            'metaTags' => $this->page->metaTags,
-	            'title'    => $this->page->metaTitle,
+	            'content'  => $this->page->get('content'),
+	            'metaTags' => $this->page->get('metaTags'),
+	            'title'    => $this->page->get('metaTitle'),
 	            // render globals
 	            'site_root' => $registry->get('site_root')
 	    ]);
-	    foreach ($this->page->headers as $header => $forced) {
-	        header($header, $forced);
-	    }
 	}
 	
 	function output() {
-		header('Content-Length: '.strlen($this->content));
+		foreach ($this->page->get('headers') as $header => $forced) {
+	        header($header, $forced);
+	    }
+	    header('Content-Length: '.strlen($this->content));
 		echo $this->content;
 	}
 
