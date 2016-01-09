@@ -8,6 +8,7 @@ use CMS\RendererCMS as Renderer;
 require ('inc/authent.php');
 
 $i18n = new i18n($registry->get('cms_i18n_path') . 'admin.xml');
+$locale = $registry->getItem('locales', $registry->get('cms_locale'));
 
 $tpl = new Template($registry->get('cms_template_path') . 'admin.htm');
 $tpli = new template($registry->get('cms_template_path') . 'admin_item.htm');
@@ -24,8 +25,8 @@ foreach (Admin::getList() as $item) {
                     'name' => $item->name,
                     'state' => $item->state,
                     'rights' => $item->rights,
-                    'dateCreate' => date('d.m.Y', $item->dateCreate),
-                    'dateLogin' => ($item->dateLogin ? date('d.m.Y H:i', $item->dateLogin) : '')
+                    'dateCreate' => date($locale['dateFormat'], $item->dateCreate),
+                    'dateLogin' => ($item->dateLogin ? date($locale['dateFormat'], $item->dateLogin) : '')
             ));
 }
 
