@@ -18,26 +18,29 @@ foreach (Admin::getList() as $item) {
     $listItems .= $tpli->apply(
             array(
                     'id' => $item->id,
-                    'name' => $item->name,
-                    'email' => $item->email,
-                    'state' => $item->state,
-                    'login' => $item->login,
                     'description' => $item->description,
-                    'rights' => $item->rights
+                    'email' => $item->email,
+                    'login' => $item->login,
+                    'name' => $item->name,
+                    'state' => $item->state,
+                    'rights' => $item->rights,
+                    'dateCreate' => $item->dateCreate,
+                    'dateLogin' => $item->dateLogin
             ));
 }
 
 $renderer = new Renderer(Page::MODE_NORMAL);
 
 $pTitle = $i18n->getText('title');
+$renderer->page->set('title', $pTitle)
+    ->set('h1', $pTitle)
+    ->set('content', 
+        $tpl->apply(
+                array(
+                        'items' => $listItems,
+                        'site_root' => $registry->get('site_root')
+                )));
 
-$renderer->page->title = $pTitle;
-$renderer->page->h1 = $pTitle;
-$renderer->page->content = $tpl->apply(
-        array(
-                'items' => $listItems,
-                'site_root' => $registry->get('site_root')
-        ));
 $renderer->loadPage();
 $renderer->output();
 ?>
