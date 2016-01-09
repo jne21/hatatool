@@ -12,7 +12,7 @@ class RendererCMS extends \common\Renderer
     {
         $registry = Registry::getInstance();
         $this->page = new Page();
-        $this->page->mode = $pageMode;
+        $this->page->set('mode', $pageMode);
         switch ($pageMode) {
             case Page::MODE_POPUP:
                 $templateFileName = 'popup.htm';
@@ -33,7 +33,7 @@ class RendererCMS extends \common\Renderer
                 $registry->get('cms_template_path') . 'main_menu.htm');
         $this->updateContent(
                 [
-                        'h1' => $this->page->h1,
+                        'h1' => $this->page->get('h1'),
                         'main_menu' => $tplMainMenu->apply(
                                 [
                                         'admin' => TRUE,
