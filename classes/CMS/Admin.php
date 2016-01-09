@@ -15,6 +15,8 @@ class Admin {
 		$password,
 		$state,
 		$rights,
+		$dateCreate,
+		$dateLogin,
 		$capability
 	;
 
@@ -56,6 +58,8 @@ function loadDataFromArray($sa) {
 	$this->password    = $sa['password'];
 	$this->state       = intval($sa['state']);
 	$this->rights      = intval($sa['rights']);
+	$this->dateCreate  = strtotime($sa['date_create']);
+	$this->dateLogin   = strtotime($sa['date_login']);
 }
 
 function save() {
@@ -77,14 +81,15 @@ function save() {
 		$db->update(self::TABLE, $person, "`id`=".$this->id);
 	}
 	else {
-		$this->password = self::passwordEncode($this->newPassword);
+        $this->dateCreate = time();
+	    $this->password = self::passwordEncode($this->newPassword);
 
+		$person['dateCreate'] = $this->dateCreate;
 		$person['password'] = $this->password;
-
+		
 		$rs = $db->insert(self::TABLE, $person);
 		$this->id = $db->insertId();
 		$this->capability->setParentId($this->id);
-//die("[".$this->id."]");
 	}
 	$this->newPassword = '';
 	$this->capability->save();
@@ -106,7 +111,7 @@ static function getInstanceByCapability($name, $value) {
 	);
 
 	if ($sa = $db->fetch($rs)) {
-		return new Person($sa['id']);
+		return new Admin($sa['id']);
 	}
 	else {
 		return FALSE;
