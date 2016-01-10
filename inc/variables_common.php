@@ -18,14 +18,15 @@ if (
     $site_protocol = 'http://';
 }
 
-$original_url = $_SERVER['REDIRECT_URL'];
- // Apache module
- // $original_url = $_SERVER['REQUEST_URI'];
- // FastCGI
- // if ($original_url=='' && $_SERVER['REQUEST_URI']!='') {
- // header('Location: '.$site_root, TRUE, 301); exit;
- // }
- // echo "[$original_url, {$_SERVER['REQUEST_URI']}]";
+//d (php_sapi_name(),1);
+$original_url = $_SERVER['REDIRECT_URL']; // Apache module
+//$original_url = $_SERVER['REQUEST_URI']; // FastCGI
+/*
+if ($original_url=='' && $_SERVER['REQUEST_URI']!='') {
+    header('Location: '.$site_root, TRUE, 301); exit;
+}
+echo "[$original_url, {$_SERVER['REQUEST_URI']}]";
+*/
 
 $parsed_url = parse_url($site_protocol . $_SERVER['HTTP_HOST'] . $original_url);
 
