@@ -40,10 +40,10 @@ else {
             $tpl->apply(
                     array(
                             'id' => $admin->id,
-                            'description' => $admin->description,
-                            'email' => $admin->email,
-                            'login' => $admin->login,
-                            'name' => $admin->name,
+                            'description' => htmlspecialchars($admin->description),
+                            'email' => htmlspecialchars($admin->email),
+                            'login' => htmlspecialchars($admin->login),
+                            'name' => htmlspecialchars($admin->name),
                             'rights' => $admin->rights,
                             'state' => $admin->state,
                             'dateCreate' => date($locale['dateFormat'], $admin->dateCreate),
