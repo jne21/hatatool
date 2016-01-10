@@ -31,7 +31,7 @@ $segment = explode('/', substr($parsed_url['path'], 1));
 
 $registry->set('segment', $segment);
 
-$registry->set('site_name', 'westmedicalgroup.com');
+$registry->set('site_name', 'wbt.com');
 
 $registry->set('site_protocol', $site_protocol);
 $registry->set('site_root', $site_protocol . $_SERVER['HTTP_HOST'] . '/');
