@@ -36,6 +36,7 @@ class RendererCMS extends \common\Renderer
                         'h1' => $this->page->get('h1'),
                         'main_menu' => $tplMainMenu->apply(
                                 [
+                                        'adminName' => $_SESSION['admin']['name'],
                                         'admin' => TRUE,
                                         'operator' => TRUE
                                 ]),

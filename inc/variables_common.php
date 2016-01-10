@@ -151,6 +151,10 @@ $locales = array(
         )
 );
 $registry->set('locales', $locales);
+$registry->set(
+        'i18n_language',
+        $registry->get('setup')->get('cms_locale')
+);
 
 setlocale(LC_ALL, $locales[$registry->get('i18n_language')]['locale']);
 // echo strftime("%A %d %B %Y", mktime(0, 0, 0, 12, 1, 1968));

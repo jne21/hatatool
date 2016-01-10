@@ -28,6 +28,8 @@
 
 	$registry = Registry::getInstance();
 
+	$registry->set('i18n_language', 'uk');
+	
 	$registry->set('site_root_absolute',   $site_root_absolute);
 	$registry->set('site_class_path',      $site_class_path);
 	$registry->set('site_template_path',   $site_root_absolute.'tpl/');
@@ -52,5 +54,4 @@
 //--------------------------------------
 
 
-	$registry->set('i18n_language', 'uk');
 	
