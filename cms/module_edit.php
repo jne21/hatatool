@@ -2,6 +2,9 @@
 $auth_required = TRUE;
 require('inc/authent.php');
 
+use common\Page;
+use common\TemplateFile as Template;
+use CMS\RendererCMS as Renderer;
 use CMS\Module;
 use CMS\I18n;
 
@@ -18,16 +21,24 @@ if ($_POST['action']=='save') {
 }
 else {
 
-    $i18n = new i18n($registry->get('cms_i18n_path').'module.xml');
-    $pTitle = $i18n->getText( $id ? 'update_mode' : 'append_mode' );
+    $i18n = new I18n($registry->get('cms_i18n_path').'module.xml');
+    $pTitle = $i18n->get( $id ? 'update_mode' : 'append_mode' );
+    
+    $tpl = new Template($registry->get('cms_template_path').'module_edit.htm');
 
+    $renderer = new Renderer(Page::MODE_NORMAL);
+    $renderer->page->set('title', $pTitle)
+        ->set('h1', $pTitle)
+        ->set('content',
+            $tpl->apply([
+                    'id'    => $module->id,
+                    'name'  => htmlspecialchars($module->name),
+                    'url'   => htmlspecialchars($module->url),
+                    'path'  => $module->path,
 
-$tpl = new template($registry->get('cms_template_path').'module_edit.htm', Template::SOURCE_FILE);
-$content = $tpl->apply(
-	array(
-		'id'    => $id,
-		'name'  => $name,
-		'url'   => $url,
-		'path'  => $path
-	)
-);
+                    'site_root' => $registry->get('site_root')
+                ]));
+
+    $renderer->loadPage();
+    $renderer->output();
+}

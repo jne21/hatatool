@@ -32,13 +32,14 @@ class Module {
 	}
 
 	function save() {
-		$record = array (
+		$db = Registry::getInstance()->get('db');
+	    $record = array (
 			'name'  => trim($this->name),
 			'url'   => trim($this->url),
 			'path'  => trim($this->path)
 		);
 		if ($this->id) {
-			$this->db->update(self::TABLE, $record, "id=".$this->id) or die('Update: '.$this->db->lastError);
+			$db->update(self::TABLE, $record, "id=".$this->id);
 		}
 		else {
 			$record[self::ORDER_FIELD_NAME] = self::getNextOrderIndex();
@@ -61,12 +62,14 @@ class Module {
 			$db = Registry::getInstance()->get('db');
 			$rs = $db->query("SELECT `".self::ORDER_FIELD_NAME."` FROM `".self::TABLE."` WHERE `id`=$id");
 			if ($sa = $db->fetch($rs)) {
-				$db->query("DELETE FROM `".self::TABLE."` WHERE id=$id") or die('Delete module: '.$db->lastError);
+				$db->query("DELETE FROM `".self::TABLE."` WHERE id=$id");
 				$db->update(
 					self::TABLE,
-					array(self::ORDER_FIELD_NAME => $db->makeForcedValue('`'.self::ORDER_FIELD_NAME.'`-1')),
-					"`".self::ORDER_FIELD_NAME."`>={$sa[self::ORDER_FIELD_NAME]}"
-				) or die('Renumber: '.$db->lastError);
+				        [
+					        self::ORDER_FIELD_NAME => $db->makeForcedValue('`'.self::ORDER_FIELD_NAME.'`-1')
+					    ],
+					    "`".self::ORDER_FIELD_NAME."`>={$sa[self::ORDER_FIELD_NAME]}"
+				);
 			}
 		}
 	}
