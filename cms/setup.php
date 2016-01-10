@@ -7,7 +7,7 @@ use common\SetupItem;
 use CMS\RendererCMS as Renderer;
 use common\Page;
 use common\TemplateFile as Template;
-use common\I18n;
+use CMS\I18n;
 
 $i18n = new I18n($registry->get('cms_i18n_path') . 'setup.xml');
 
