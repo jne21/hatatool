@@ -1,4 +1,5 @@
 <?php
+$auth_required = TRUE;
 require('inc/authent.php');
 
 use common\Setup;

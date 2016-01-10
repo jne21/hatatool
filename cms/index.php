@@ -1,14 +1,14 @@
-<?
-	require('inc/authent.php');
+<?php
+$auth_required = TRUE;
+require('inc/authent.php');
 
-	use common\Page;
-	use CMS\RendererCMS as Renderer;
+use common\Page;
+use CMS\RendererCMS as Renderer;
 
-	$pTitle = "Керуючий інтерфейс";
+$pTitle = "Керуючий інтерфейс";
 
-	$renderer = new Renderer(Page::MODE_NORMAL);
-	$renderer->page->title = $pTitle;
+$renderer = new Renderer(Page::MODE_NORMAL);
+$renderer->page->title = $pTitle;
 
-	$renderer->output();
+$renderer->output();
 
-?>
