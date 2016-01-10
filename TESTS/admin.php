@@ -12,6 +12,7 @@ out( "CMS\Admin" );
 	$admin_password     = 'admin_password';
 	$admin_state        = Admin::BLOCKED;
 	$admin_rights       = Admin::RIGHTS_DEFAULT;
+	$admin_locale       = 'ru';
 
 	$admin = new Admin;
 	$admin->description = $admin_description;
@@ -21,6 +22,7 @@ out( "CMS\Admin" );
 	$admin->setNewPassword($admin_password);
 	$admin->state       = $admin_state;
 	$admin->rights      = $admin_rights;
+	$admin->locale      = $admin_locale;
 
 out( "CMS\Admin->save() - create mode" );
 	$admin->save();
@@ -39,7 +41,8 @@ out( "CMS\Admin->__construct()" );
 	compare($adm1n->password, Admin::passwordEncode($admin_password),  "Create Admin: Error saving admin->password");
 	compare($adm1n->state,    $admin_state,  "Create Admin: Error saving admin->state");
 	compare($adm1n->rights,   $admin_rights, "Create Admin: Error saving admin->rights");
-
+	compare($adm1n->locale,   $admin_locale, "Create Admin: Error saving admin->locale");
+	
 	$adm1n_description  = 'Admin description 1';
 	$adm1n_email        = 'admin email 1';
 	$adm1n_login        = 'admin_login 1';
@@ -47,7 +50,8 @@ out( "CMS\Admin->__construct()" );
 	$adm1n_password     = 'admin_password 1';
 	$adm1n_state        = Admin::ACTIVE;
 	$adm1n_rights       = Admin::RIGHTS_ALL;
-
+	$adm1n_locale       = 'uk';
+	
 	$adm1n->description = $adm1n_description;
 	$adm1n->email       = $adm1n_email;
 	$adm1n->login       = $adm1n_login;
@@ -55,7 +59,8 @@ out( "CMS\Admin->__construct()" );
 	$adm1n->password    = $adm1n->setNewPassword($adm1n_password);
 	$adm1n->state       = $adm1n_state;
 	$adm1n->rights      = $adm1n_rights;
-
+	$adm1n->locale      = $adm1n_locale;
+	
 out( "CMS\Admin->save() - update mode");
 	$adm1n->save();
 	unset($adm1n);
@@ -70,7 +75,8 @@ out( "CMS\Admin->save() - update mode");
 	compare($adm2n->password,    Admin::passwordEncode($adm1n_password), "Update Admin: Error saving admin->password.");
 	compare($adm2n->state,       $adm1n_state,       "Update Admin: Error saving admin->state.");
 	compare($adm2n->rights,      $adm1n_rights,      "Update Admin: Error saving admin->rights.");
-
+	compare($adm2n->locale,      $adm1n_locale,      "Update Admin: Error saving admin->locale.");
+	
 	unset($adm2n);
 
 	$adm3n = Admin::getInstance($adm1n_login, $adm1n_password);
@@ -101,6 +107,7 @@ out( "CMS\Admin->getList()");
 					compare($adm5n->password,    Admin::passwordEncode($adm1n_password), "Admin getList: Error getting admin->password");
 					compare($adm5n->state,       $adm1n_state,       "Admin getList: Error getting admin->state");
 					compare($adm5n->rights,      $adm1n_rights,      "Admin getList: Error getting admin->rights");
+					compare($adm5n->locale,      $adm1n_locale,      "Admin getList: Error getting admin->locale");
 				}
 				unset($adm5n);
 			}
@@ -133,6 +140,7 @@ function createAdmin() {
 	$admin->password = 'qwerty';
 	$admin->state = 0;
 	$admin->rights = 0;
+	$admin->locale = 'uk';
 	$admin->save();
 	return $admin;
 }
