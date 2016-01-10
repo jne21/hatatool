@@ -1,15 +1,13 @@
 <?php
-use CMS\Admin;
 use common\TemplateFile as Template;
-use common\I18n;
 use common\Page;
+use CMS\Admin;
+use CMS\I18n;
 use CMS\RendererCMS as Renderer;
 
 require ('inc/authent.php');
-
-$i18n = new i18n($registry->get('cms_i18n_path') . 'admin.xml');
-$locale = $registry->getItem('locales', $registry->get('cms_locale'));
-
+$i18n = new I18n($registry->get('cms_i18n_path') . 'admin.xml');
+$locale = $registry->getItem('locales', $registry->get('setup')->get('cms_locale'));
 $tpl = new Template($registry->get('cms_template_path') . 'admin.htm');
 $tpli = new template($registry->get('cms_template_path') . 'admin_item.htm');
 

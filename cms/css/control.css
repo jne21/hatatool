@@ -95,3 +95,6 @@ div.order_products>div>div {display: table-cell; padding: 1px 3px;/* border: 1px
 div.order_products>div:nth-child(odd), .odd {background: transparent;}
 div.order_products>div:nth-child(even), .even {background: #e0e0e0;}
 div.order_products:hover>div:nth-child(even), .even {background: #FFF;}
+
+#editor {display: none; position: absolute; z-index:999999; outline: none; border:1px solid green;}
+.editable {background-color: #FFFFCC; padding: 3px 5px;}

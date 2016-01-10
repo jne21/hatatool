@@ -35,8 +35,8 @@ function getList() {
 }
 
 function updateValue($name, $value) {
-	if (isset($this->values[$name])) {
-		$this->values[$name]->setProperty('value', $value);
+    if (isset($this->values[$name])) {
+        $this->values[$name]->setProperty('value', $value);
 		$this->values[$name]->save();
 	}
 }
@@ -58,6 +58,15 @@ function save($name, $value, $description) {
 		);
 		$this->values[$name]->create();
 	}
+}
+
+/**
+ * Standard getter
+ * @param string $name
+ * @return mixed
+ */
+function getProperty($name) {
+    return $this->$name;
 }
 
 }

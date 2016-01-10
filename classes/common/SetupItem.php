@@ -13,20 +13,20 @@ final class SetupItem {
 	}
 
 	function save() {
-		$this->parentObject->$db->update(
-			$this->parenObject->table,
+	    $db = $this->parentObject->getProperty('db'); 
+	    $db->update(
+			$this->parentObject->getProperty('table'),
 			array(
 				'value'       => $this->value,
 				'description' => $this->description
 			),
 			"`name`=".$db->escape($this->name)
-		);
-		echo $value;
+		) or die($db->lastError);
 	}
 
 	function create() {
-		$this->parentObject->$db->insert(
-			$this->parenObject->table,
+		$this->parentObject->getProperty('db')->insert(
+			$this->parentObject->getProperty('table'),
 			array(
 				'name'        => $this->name,
 				'value'       => $this->value,
