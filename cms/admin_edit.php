@@ -1,12 +1,13 @@
 <?php
+$auth_required = TRUE;
+require('inc/authent.php');
+
 use CMS\Admin;
 use CMS\RendererCMS as Renderer;
 use common\Page;
 use common\Registry;
 use common\I18n;
 use common\TemplateFile as Template;
-
-require('inc/authent.php');
 
 $admin = new Admin($id = intval($_GET['id']));
 

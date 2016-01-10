@@ -2,6 +2,8 @@
 
 namespace system;
 
+use \common\Registry;
+
 class LoginError {
 
 	const
