@@ -21,7 +21,7 @@ foreach (Admin::getList() as $item) {
                     'email' => $item->email,
                     'login' => $item->login,
                     'name' => $item->name,
-                    'state' => $item->state,
+                    'state' => $i18n->getText('state'.$item->state),
                     'rights' => $item->rights,
                     'dateCreate' => date($locale['dateFormat'], $item->dateCreate),
                     'dateLogin' => ($item->dateLogin ? date($locale['dateFormat'], $item->dateLogin) : ''),
