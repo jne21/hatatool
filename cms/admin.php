@@ -23,7 +23,7 @@ foreach (Admin::getList() as $item) {
                     'email' => $item->email,
                     'login' => $item->login,
                     'name' => $item->name,
-                    'state' => $i18n->getText('state'.$item->state),
+                    'state' => $i18n->get('state'.$item->state),
                     'rights' => $item->rights,
                     'dateCreate' => date($locale['dateFormat'], $item->dateCreate),
                     'dateLogin' => ($item->dateLogin ? date($locale['dateFormat'], $item->dateLogin) : ''),
@@ -33,7 +33,7 @@ foreach (Admin::getList() as $item) {
 
 $renderer = new Renderer(Page::MODE_NORMAL);
 
-$pTitle = $i18n->getText('title');
+$pTitle = $i18n->get('title');
 $renderer->page->set('title', $pTitle)
     ->set('h1', $pTitle)
     ->set('content', 

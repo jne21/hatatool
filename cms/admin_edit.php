@@ -44,7 +44,7 @@ else {
 
     $renderer = new Renderer(Page::MODE_NORMAL);
     
-    $pTitle = $i18n->getText(
+    $pTitle = $i18n->get(
         $admin->id ?  'update_mode' : 'append_mode'
     );
     $renderer->page->set('title', $pTitle)

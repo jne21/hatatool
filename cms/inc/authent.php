@@ -31,12 +31,12 @@ if ($auth_required == true) {
 					else {
 						LoginError::register($_POST['login'], $_POST['password']);
 						$limit = LOGIN_ERROR_LIMIT-1-$sae['cnt'];
-						$message = $i18n->getText('login_error');
+						$message = $i18n->get('login_error');
 						$_SESSION['login_error'] = 1;
 					}
 				}
 			}
-			else $message = $i18n->getText('input_error');
+			else $message = $i18n->get('input_error');
 		}
 		if (intval($_SESSION['admin']['id'])==0 || $message!='') {
 			$tpl = new Template($registry->get('cms_template_path').'login.htm');

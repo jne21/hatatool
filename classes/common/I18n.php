@@ -16,7 +16,7 @@ class I18n {
 		$this->language = Registry::getInstance()->get('i18n_language');
 	}
 
-	function getText($key, $lang='') {
+	function get($key, $lang='') {
 		if (empty($lang)) $lang=$this->language;
 		if (($node = $this->dom->getElementById($key)) === NULL) {
 			$value = "<strong>[$key]</strong>[$lang]"; // key not found

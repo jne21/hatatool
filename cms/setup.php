@@ -28,7 +28,7 @@ foreach ($setup->getList() as $variable) {
 
 $renderer = new Renderer(Page::MODE_NORMAL);
 
-$pTitle = $i18n->getText('title');
+$pTitle = $i18n->get('title');
 $renderer->page->set('title', $pTitle)
     ->set('h1', $pTitle)
     ->set('content',
