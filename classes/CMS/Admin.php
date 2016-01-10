@@ -17,6 +17,7 @@ class Admin {
 		$rights,
 		$dateCreate,
 		$dateLogin,
+		$locale,
 		$capability
 	;
 
@@ -60,6 +61,7 @@ function loadDataFromArray($sa) {
 	$this->rights      = intval($sa['rights']);
 	$this->dateCreate  = strtotime($sa['date_create']);
 	$this->dateLogin   = strtotime($sa['date_login']);
+	$this->locale      = $sa['locale'];
 }
 
 function save() {
@@ -71,7 +73,8 @@ function save() {
 		'login'       => $this->login,
 		'name'        => $this->name,
 		'state'       => $this->state,
-		'rights'      => $this->rights
+		'rights'      => $this->rights,
+	    'locale'      => $this->locale
 	];
 
 	if ($this->id) {
