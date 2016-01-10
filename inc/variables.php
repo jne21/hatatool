@@ -16,6 +16,7 @@
 	require($site_class_path.'system/Exception.php');
 	use system\ExceptionHandler;
 	$errorHandler = new ExceptionHandler;
+	$errorHandler->setupHandlers();
 	$errorHandler->debug = true;
 
 	date_default_timezone_set('Europe/Kiev');
