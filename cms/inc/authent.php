@@ -20,7 +20,11 @@ if ($auth_required == true) {
 					if ($admin->id) {
 					    $admin->dateLogin = time();
 						$admin->save();
-					    $_SESSION['admin']['id'] = $admin->id;
+					    $_SESSION['admin'] = [
+					            'id' => $admin->id,
+					            'locale' => $admin->locale,
+					            'name' => $admin->name
+					    ];
 						unset($_SESSION['login_error']);
 						// header("Location: index.php"); // uncomment to disable pass-through authentification
 					}
