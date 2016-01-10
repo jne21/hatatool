@@ -11,16 +11,18 @@ class Module {
 		$path = '';
 
 	const
-		TABLE = 'module';
+        DB = 'db',
+		TABLE = 'module',
+		ORDER_FIELD_NAME = 'order'
+    ;
 
-	protected
-		$db;
-
+	use \common\entity;
+	
 	function __construct($moduleId) {
-		$this->db = Registry::getInstance()->get('db');
+		$db = Registry::getInstance()->get('db');
 		if ($id = intval($moduleId)) {
-			$rs = $this->db->query("SELECT * FROM `".self::TABLE."` WHERE id=$id") or die('Fetch: '.$this->db->lastError);
-			if ($sa = $this->db->fetch($rs)) {
+			$rs = $db->query("SELECT * FROM `".self::TABLE."` WHERE id=$id");
+			if ($sa = $db->fetch($rs)) {
 				$this->id    = $id;
 				$this->name  = $sa['name'];
 				$this->url   = $sa['url'];
@@ -39,21 +41,14 @@ class Module {
 			$this->db->update(self::TABLE, $record, "id=".$this->id) or die('Update: '.$this->db->lastError);
 		}
 		else {
-			$record['num'] = 0;
-			$this->db->insert(self::TABLE, $record) or die('Insert: '.$this->db->lastError);
-			$this->db->update(
-				self::TABLE,
-				array (
-					'num' => $this->db->makeForcedValue('`num`+1')
-				),
-				''
-			) or die('Update: '.$this->db->lastError);
+			$record[self::ORDER_FIELD_NAME] = self::getNextOrderIndex();
+			$db->insert(self::TABLE, $record);
 		}
 	}
 
 	static function getList() {
 		$db = Registry::getInstance()->get('db');
-		$rs = $db->query("SELECT * FROM `".self::TABLE."` ORDER BY `num`") or die('M1: '.$db->lastError);
+		$rs = $db->query("SELECT * FROM `".self::TABLE."` ORDER BY `".self::ORDER_FIELD_NAME."`");
 		$items = array ();
 		while($sa = $db->fetch($rs)) {
 			$items[] = $sa;
@@ -62,35 +57,17 @@ class Module {
 	}
 
 	static function delete($moduleId) {
-
 		if ($id = intval($moduleId)) {
 			$db = Registry::getInstance()->get('db');
-			$rs = $db->query("SELECT `num` FROM `".self::TABLE."` WHERE `id`=$id") or die('Select: '.$db->lastError);
+			$rs = $db->query("SELECT `".self::ORDER_FIELD_NAME."` FROM `".self::TABLE."` WHERE `id`=$id");
 			if ($sa = $db->fetch($rs)) {
 				$db->query("DELETE FROM `".self::TABLE."` WHERE id=$id") or die('Delete module: '.$db->lastError);
 				$db->update(
 					self::TABLE,
-					array('num'=>$db->makeForcedValue('`num`-1')),
-					"`num`>={$sa['num']}"
+					array(self::ORDER_FIELD_NAME => $db->makeForcedValue('`'.self::ORDER_FIELD_NAME.'`-1')),
+					"`".self::ORDER_FIELD_NAME."`>={$sa[self::ORDER_FIELD_NAME]}"
 				) or die('Renumber: '.$db->lastError);
 			}
-		}
-	}
-
-	static function move($moduleId, $action) {
-
-		if ($id = intval($moduleId)) {
-			$db = Registry::getInstance()->get('db');
-			$act = intval($action);
-
-			$rs = $db->query("SELECT * FROM ".self::TABLE." WHERE `id`=$id") or die('Get: '.db_lastError);
-			$sa = $db->fetch($rs);
-
-			$oldnum = $sa['num'];
-			$newnum = $oldnum + ($act ? 1 : -1);
-
-			$db->update(self::TABLE, array('num' => $newnum), "id=$id") or die('UPD1: '.$db->lastError);
-			$db->update(selg::TABLE, array('num' => $oldnum), "`num`=$newnum AND id<>$id") or die('UPD2: '.$db->lastError);
 		}
 	}
 

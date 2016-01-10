@@ -2,12 +2,13 @@
 $auth_required = TRUE;
 require('inc/authent.php');
 
+use common\TemplateFile as Template;
+use common\Page;
 use CMS\Module;
 use CMS\I18n;
-use common\TemplateFile as Template;
+use CMS\RendererCMS as Renderer; 
 
 $i18n = new i18n($registry->get('cms_i18n_path').'module.xml');
-$pTitle = $i18n->get('title');
 
 $tpl  = new Template($registry->get('cms_template_path').'module.htm');
 $tpli = new Template($registry->get('cms_template_path').'module_item.htm');
@@ -29,10 +30,17 @@ foreach ($list as $line) {
 	);
 }
 
-$content = $tpl->apply(
-		array(
-			'items' => $items
-		)
-	);
+$renderer = new Renderer(Page::MODE_NORMAL);
 
-	require('inc/_admin_bottom.php');
+$pTitle = $i18n->get('title');
+$renderer->page->set('title', $pTitle)
+    ->set('h1', $pTitle)
+    ->set('content',
+        $tpl->apply(
+                array(
+                        'items' => $listItems,
+                        'site_root' => $registry->get('site_root')
+                )));
+
+$renderer->loadPage();
+$renderer->output();
