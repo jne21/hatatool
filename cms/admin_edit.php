@@ -17,6 +17,7 @@ if ($_POST['action'] == 'save') { //d($_POST, 1);
 	$admin->name         = trim($_POST['name']);
     $admin->rights       = intval($_POST['rights']);
     $admin->state        = intval($_POST['state']=='on');
+    $admin->locale       = trim($_POST['locale']);
 	if ($_POST['password']) {
         $admin->setNewPassword($_POST['password']);
 	}
@@ -26,7 +27,18 @@ if ($_POST['action'] == 'save') { //d($_POST, 1);
 }
 else {
     $i18n = new I18n($registry->get('cms_i18n_path').'admin.xml');
+    $tplso = new Template($registry->get('cms_template_path').'select_option.htm');
+    $localeItems = '';
+    foreach ($registry->get('locales') as $locale=>$localeData) {
+        $localeItems .= $tplso->apply([
+                'name' => $localeData['name'],
+                'value' => $locale,
+                'selected' => $locale==$admin->locale
+        ]);
+    } 
+
     $locale = $registry->getItem('locales', $registry->get('cms_locale'));
+
     $tpl = new Template($registry->get('cms_template_path').'admin_edit.htm');
 
     $renderer = new Renderer(Page::MODE_NORMAL);
@@ -46,6 +58,7 @@ else {
                             'name' => htmlspecialchars($admin->name),
                             'rights' => $admin->rights,
                             'state' => $admin->state,
+                            'localeItems' => $localeItems,
                             'dateCreate' => date($locale['dateFormat'], $admin->dateCreate),
                             'dateLogin' => $admin->dateLogin ? date($locale['dateFormat'] . ' H:i', $admin->dateLogin) : '',
                             'site_root' => $registry->get('site_root')
