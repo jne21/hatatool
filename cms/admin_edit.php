@@ -1,4 +1,4 @@
-<?
+<?php
 use CMS\Admin;
 use CMS\RendererCMS as Renderer;
 use common\Page;

@@ -1,4 +1,4 @@
-<?
+<?php
 use CMS\Admin;
 use common\TemplateFile as Template;
 use common\I18n;
