@@ -84,10 +84,10 @@ function save() {
         $this->dateCreate = time();
 	    $this->password = self::passwordEncode($this->newPassword);
 
-		$person['dateCreate'] = $this->dateCreate;
+		$person['date_create'] = date('Y-m-d H:i:s', $this->dateCreate);
 		$person['password'] = $this->password;
 		
-		$rs = $db->insert(self::TABLE, $person);
+		$rs = $db->insert(self::TABLE, $person) or die($db->lastError);
 		$this->id = $db->insertId();
 		$this->capability->setParentId($this->id);
 	}
