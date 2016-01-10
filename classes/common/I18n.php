@@ -19,15 +19,15 @@ class I18n {
 	function getText($key, $lang='') {
 		if (empty($lang)) $lang=$this->language;
 		if (($node = $this->dom->getElementById($key)) === NULL) {
-			$value = "<strong>[$key]</strong>[$lang]"; // Не существует ключ
+			$value = "<strong>[$key]</strong>[$lang]"; // key not found
 		}
 		else {
 			$lnode = $node->getElementsByTagName($lang);
 			if ($lnode->item(0) === NULL) {
-				$value = "[$key]<strong>[$lang]</strong>"; // Не определены значения для ключа
+				$value = "[$key]<strong>[$lang]</strong>"; // no i18n for selected key
 			}
 			else {
-				$value = "[$key][$lang]Empty"; // Нет значения ключа на запрошенном языке
+				$value = "[$key][$lang]Empty"; // ok
 				foreach ($lnode->item(0)->childNodes as $cnode) {
 					$nodeClass = get_class($cnode);
 					if ($nodeClass == 'DOMText' || $nodeClass == 'DOMCdataSection') {
