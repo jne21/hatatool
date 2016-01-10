@@ -1,0 +1,12 @@
+<tr>
+	<td align="center" width="16">{?is_up}<a href="module_move.php?id={id}&act=up" title="Вгору"><img src="img/up.gif" height="16" width="16" alt="Вгору" border="0" /></a>{:is_up}&nbsp;{/is_up}</td>
+	<td align="center" width="16">{?is_dn}<a href="module_move.php?id={id}&act=dn" title="Вниз"><img src="img/dn.gif" height="16" width="16" alt="Вниз" border="0" /></a>{:is_dn}&nbsp;{/is_dn}</td>
+	</td>
+	<td style="padding-left: {padding};">{name}</td>
+	<td>{url}</td>
+	<td>{path}</td>
+	<td class="controls">
+		<a href="module_edit.php?id={id}" title="Редагувати"><img src="img/b_edit.png" border="0" alt="Редагувати" width="16" height="16" /></a>
+		<a href="module_del.php?id={id}" onclick="return confirm('Видалити?')"><img src="img/b_drop.png" border="0" alt="Видалити" width="16" height="16" /></a>
+	</td>
+</tr>
