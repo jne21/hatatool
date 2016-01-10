@@ -44,4 +44,3 @@ $renderer->page->set('title', $pTitle)
 
 $renderer->loadPage();
 $renderer->output();
-?>
