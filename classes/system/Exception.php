@@ -4,7 +4,7 @@ namespace system;
 class ExceptionHandler {
 
 	public $debug = FALSE;
-	public $errorTypes = (E_ALL & ~E_STRICT) & ~E_NOTICE;
+	public $errorTypes = E_ALL & (~E_STRICT) & (~E_NOTICE);
 
 	protected $oldErrorHandler, $oldExceptionHandler;
 	protected $errorHandlerObject, $exceptionHandlerObject;
