@@ -25,13 +25,8 @@ foreach (Admin::getList() as $item) {
                     'name' => $item->name,
                     'state' => $item->state,
                     'rights' => $item->rights,
-<<<<<<< HEAD
                     'dateCreate' => date($locale['dateFormat'], $item->dateCreate),
                     'dateLogin' => ($item->dateLogin ? date($locale['dateFormat'], $item->dateLogin) : '')
-=======
-                    'dateCreate' => date('d.m.Y', $item->dateCreate),
-                    'dateLogin' => ($item->dateLogin ? date('d.m.Y H:i', $item->dateLogin) : '')
->>>>>>> 83ba7ce9e57c784d7d2da44bc839ad1592b79548
             ));
 }
 
