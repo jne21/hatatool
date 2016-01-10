@@ -20,5 +20,20 @@
 		<uk>Активний</uk>
 		<ru>Активен</ru>
 	</token>
-	
+	<token xml:id="login_title">
+		<uk>Керуючий інтерфейс</uk>
+		<ru>Управляющий интерфейс</ru>
+	</token>
+	<token xml:id="error_limit_exceeded">
+		<uk><![CDATA[Перевищено ліміт помилок входу.<br />Вас заблоковано на 30 хвилин.]]></uk>
+		<ru><![CDATA[Исчерпан лимит ошибок входа.<br />Вы заблокированы на 30 минут.]]></ru>
+	</token>
+	<token xml:id="login_error">
+		<uk><![CDATA[Невірний логін або пароль.]]></uk>
+		<ru><![CDATA[Неправильный логин или пароль.]]></ru>
+	</token>
+	<token xml:id="empty_login_or_password">
+		<uk><![CDATA[Логін та пароль не можуть бути пустими.]]></uk>
+		<ru><![CDATA[Логин и пароль не могут быть пустыми.]]></ru>
+	</token>
 </i18n>
