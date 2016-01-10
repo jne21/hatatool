@@ -40,6 +40,7 @@ class RendererCMS extends \common\Renderer
                                         'operator' => TRUE
                                 ]),
                                 'adminName' => $_SESSION['admin']['name'],
+                                'adminId' => $_SESSION['admin']['id'],
                         // Render Globals
                         'year_now' => date('Y')
                 ]);
