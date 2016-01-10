@@ -4,25 +4,28 @@ use CMS\Renderer;
 
 require ($site_include_path . 'removedir.php');
 
-if (isset($_SERVER['HTTPS']) &&
-         ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
-         isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-         $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+if (
+        isset($_SERVER['HTTPS'])
+        && (
+                $_SERVER['HTTPS'] == 'on'
+                || $_SERVER['HTTPS'] == 1
+        )
+        || $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'
+) {
+
     $site_protocol = 'https://';
 } else {
     $site_protocol = 'http://';
 }
 
-$original_url = $_SERVER['REDIRECT_URL']; // Apache module
-                                          // $original_url =
-                                          // $_SERVER['REQUEST_URI']; // FastCGI
-                                          
-// if ($original_url=='' && $_SERVER['REQUEST_URI']!='') {
-                                          // header('Location: '.$site_root,
-                                          // TRUE, 301); exit;
-                                          // }
-                                          
-// echo "[$original_url, {$_SERVER['REQUEST_URI']}]";
+$original_url = $_SERVER['REDIRECT_URL'];
+ // Apache module
+ // $original_url = $_SERVER['REQUEST_URI'];
+ // FastCGI
+ // if ($original_url=='' && $_SERVER['REQUEST_URI']!='') {
+ // header('Location: '.$site_root, TRUE, 301); exit;
+ // }
+ // echo "[$original_url, {$_SERVER['REQUEST_URI']}]";
 
 $parsed_url = parse_url($site_protocol . $_SERVER['HTTP_HOST'] . $original_url);
 
