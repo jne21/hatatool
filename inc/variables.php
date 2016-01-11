@@ -14,22 +14,23 @@
 	$site_module_path   = $site_root_absolute.'modules/';
 
 	require($site_class_path.'system/Exception.php');
+
 	use system\ExceptionHandler;
+
 	$errorHandler = new ExceptionHandler;
-	$errorHandler->setupHandlers();
+#	$errorHandler->setupHandlers();
 	$errorHandler->debug = true;
 
 	date_default_timezone_set('Europe/Kiev');
 
 
 	require($site_class_path.'common/Registry.php');
-	use common\Registry as Registry;
-
+	use common\Registry;
 
 	$registry = Registry::getInstance();
 
 	$registry->set('i18n_language', 'uk');
-	
+
 	$registry->set('site_root_absolute',   $site_root_absolute);
 	$registry->set('site_class_path',      $site_class_path);
 	$registry->set('site_template_path',   $site_root_absolute.'tpl/');
