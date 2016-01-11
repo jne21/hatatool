@@ -48,8 +48,8 @@ class Redirect {
         $this->destination = $data['destination'];
         $this->active      = $data['active'];
         $this->status      = $data['status'];
-        $this->dateRequest = strtotime($sa['date_request']);
-        $this->dateCreate  = strtotime($sa['dateCreate']);
+        $this->dateRequest = strtotime($data['date_request']);
+        $this->dateCreate  = strtotime($data['date_create']);
         $this->order       = $data[self::ORDER_FIELD_NAME];
     }
 
@@ -73,6 +73,7 @@ class Redirect {
      * Сохранение объекта в базе данных
      */
     function save() {
+        $db = Registry::getInstance()->get('db');
         $record = [
                 'source'      => $this->source,
                 'destination' => $this->destination,
@@ -83,9 +84,9 @@ class Redirect {
             $db->update(self::TABLE, $record, "`id`=".$this->id);
         }
         else {
-            $record['dateCreate'] = $db->makeForcedValue('NOW()');
+            $record['date_create'] = $db->makeForcedValue('NOW()');
             $record[self::ORDER_FIELD_NAME] = 0;
-            $db->insert(self::TABLE, $record);
+            $db->insert(self::TABLE, $record) or die($db->lastError);
             $db->update(
                     self::TABLE,
                     ['num' => $db->makeForcedValue('`num`+1')],
