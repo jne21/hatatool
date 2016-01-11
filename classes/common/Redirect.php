@@ -11,11 +11,23 @@ class Redirect {
         ORDER_FIELD_NAME = 'order'        
     ;
 
-    public $id, $source, $destination, $active, $status, $dateRequest, $dateCreate, $order;
+    public
+        $id,
+        $source,
+        $destination,
+        $active,
+        $status,
+        $dateRequest,
+        $dateCreate,
+        $order;
     
     
     use \common\entity;
     
+    /**
+     * Создание экземпляра редиректа из БД.
+     * @param int $instanceId
+     */
     function __construct($instanceId = NULL) {
         if ($id = intval($instanceId)) {
             $db = Registry::getInstance()->get('db');
@@ -26,6 +38,10 @@ class Redirect {
         }
     }
 
+    /**
+     * Загрузка данных в объект из внешнего массива.
+     * @param array $data
+     */
     function loadDataFromArray($data) {
         $this->id          = $data['id'];
         $this->source      = $data['source'];
@@ -37,6 +53,10 @@ class Redirect {
         $this->order       = $data[self::ORDER_FIELD_NAME];
     }
 
+    /**
+     * Получение списка редиректов в виде массива объектов
+     * @return multitype:\common\Redirect[]
+     */
     static function getList() {
         $list = [];
         $db = Registry::getInstance()->get('db');
@@ -49,6 +69,9 @@ class Redirect {
         return $list;
     }
 
+    /**
+     * Сохранение объекта в базе данных
+     */
     function save() {
         $record = [
                 'source'      => $this->source,
@@ -72,14 +95,22 @@ class Redirect {
         
     }
 
+    /**
+     * Обновление даты последнего запроса
+     * @param int $entityId
+     */
     static function updateRequestDate($entityId) {
         if ($id = intval($entityId)) {
             self::updateValue($id, 'date_request', date('Y-m-d H:i:s'));
         }
     }
     
-    static function delete($id) {
-    	if ($id = intval($_GET['id'])) {
+    /**
+     * Удаление редиректа из БД
+     * @param unknown $id Идентификатор редиректа
+     */
+    static function delete($entityId) {
+    	if ($id = intval($entityId)) {
             $db = Registry::getInstance()->get('db');
     	    $rs = $db->query("SELECT `".self::ORDER_FIELD_NAME."` FROM `".self::TABLE."` WHERE `id`=$id");
             if ($sa = $db->fetch($rs)) {
@@ -95,11 +126,21 @@ class Redirect {
         }
     }
 
+    /**
+     * Standard setter
+     * @param string $property Property name
+     * @param string $value New property value
+     * @return \common\Redirect
+     */
     function set($property, $value) {
         $this->$property = $value;
         return $this;
     }
     
+    /**
+     * Standard getter
+     * @param string $property Property name
+     */
     function get($property) {
         return $this->$property;
     }
