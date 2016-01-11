@@ -42,13 +42,13 @@ trait entity {
 	}
 
 	/**
-	 * Установка значения атрибута show (видимость записи) в БД без создания экземпляра объекта.
+	 * Установка значения атрибута видимости записи в БД без создания экземпляра объекта.
 	 * @param $id Int Значение первичного ключа.
 	 * @param $action Int Новое значение (1 или 0)
 	 * @return NULL
 	 **/
-	static function toggle($id, $action) {
-		self::updateValue($id, 'show', intval($action));
+	static function toggle($id, $action, $property='show') {
+		self::updateValue($id, $property, intval($action));
 	}
 
 	/**
