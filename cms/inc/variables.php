@@ -5,7 +5,7 @@ if (isset($_SESSION['admin']['locale'])) {
     $language = $_SESSION['admin']['locale'];
 }
 else {
-    $language = Registry::getInstance()->get('setup')->get('cms_locale');
+    $language = $registry->get('setup')->get('cms_locale');
 }
 
 $registry->set('i18n_language', $language);

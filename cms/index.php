@@ -3,6 +3,7 @@ $auth_required = TRUE;
 require('inc/authent.php');
 
 use common\Page;
+use common\Registry;
 use CMS\RendererCMS as Renderer;
 use CMS\I18n;
 

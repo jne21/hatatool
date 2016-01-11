@@ -1,8 +1,9 @@
 <?php
-require ('inc/authent.php');
+require ('inc/connect.php');
 
 use common\TemplateFile as Template;
 use common\Page;
+#use common\Registry;
 use CMS\Admin;
 use CMS\I18n;
 use CMS\RendererCMS as Renderer;
