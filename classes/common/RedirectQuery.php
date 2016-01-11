@@ -33,7 +33,7 @@ class RedirectQuery {
     function loadDataFromArray($data) {
         $this->id = $data['id'];
         $this->redirectId = $data['redirect_id'];
-        $this->date = strtotime($data['dt']);
+        $this->date = strtotime($data['date']);
         $this->HTTP_REFERER = $data['HTTP_REFERER'];
         $this->REMOTE_ADDR = $data['REMOTE_ADDR'];
         $this->HTTP_USER_AGENT = $data['HTTP_USER_AGENT'];

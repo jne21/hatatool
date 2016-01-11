@@ -3,6 +3,7 @@ $auth_required = true;
 require('inc/authent.php');
 
 use common\Redirect;
+use common\RedirectQuery;
 use common\Page;
 use common\TemplateFile as Template;
 use CMS\I18n;
@@ -24,26 +25,22 @@ if ($_POST['action']=='save') {
 else {
 
     $i18n = new I18n($registry->get('cms_i18n_path').'redirect.xml');
-/*
-    $queries = '';
-    if ($id) {
-	$tplq = new Template('tpl/redirect_query_item.htm', Template::SOURCE_FILE);
-
-	$rsq = $db->query("SELECT * FROM `redirect_query` WHERE `redirect_id`=$id ORDER BY `dt` DESC") or die('Redirect Query: '.$db->lastError);
-	while ($saq = $db->fetch($rsq)) {
-		$queries .= $tplq->apply (
-			array (
-				'dt'                    => date('d.m.y&\nb\sp;H:i', strtotime($saq['dt'])),
-				'HTTP_REFERER'          => $saq['HTTP_REFERER'],
-				'REMOTE_ADDR'           => $saq['REMOTE_ADDR'],
-				'HTTP_USER_AGENT'       => $saq['HTTP_USER_AGENT'],
-				'REDIRECT_URL'          => $saq['REDIRECT_URL'],
-				'REDIRECT_QUERY_STRING' => $saq['REDIRECT_QUERY_STRING']
-			)
-		);
-	}
-*/
+    $locale = $registry->getItem('locales', $registry->get('setup')->get('cms_locale'));
     
+    $queries = '';
+    if ($redirect->id) {
+	    $tplq = new Template($registry->get('cms_template_path').'redirect_query_item.htm');
+        foreach (RedirectQuery::getList($redirect->id) as $query) {
+            $queries .= $tplq->apply ([
+				'date'                  => date($locale['dateFormat'].'&\nb\sp;H:i', $query->date),
+				'HTTP_REFERER'          => $query->HTTP_REFERER,
+				'REMOTE_ADDR'           => $query->REMOTE_ADDR,
+				'HTTP_USER_AGENT'       => $query->HTTP_USER_AGENT,
+				'REDIRECT_URL'          => $query->REDIRECT_URL,
+				'REDIRECT_QUERY_STRING' => $query->REDIRECT_QUERY_STRING
+			]);
+        }
+	}
 
     $tpl = new Template($registry->get('cms_template_path').'redirect_edit.htm');
 
