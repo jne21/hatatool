@@ -2,6 +2,8 @@
 
 namespace common;
 
+use common\RedirectQuery;
+
 class Redirect {
 
     const
@@ -127,6 +129,14 @@ class Redirect {
         }
     }
 
+    /**
+     * Удаление истории запросов для заданного редиректа
+     * @param int $entityId Идентификатор редиректа
+     */
+    static function purge($entityId) {
+        RedirectQuery::purge($entityId);
+        self::updateValue($entityId, 'date_request', NULL);
+    }
     /**
      * Standard setter
      * @param string $property Property name
