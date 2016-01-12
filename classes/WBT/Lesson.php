@@ -22,9 +22,7 @@ final class Lesson extends \common\SimpleObject {
 	use \common\entity;
 
 	function __construct($courseId = NULL) {
-	    if ($id = intval($courseId)) {
-            parent::__construct($id);
-		}
+        parent::__construct($courseId);
 		$this->l10n  = new LessonL10n($this->id);
 	}
 	
@@ -63,7 +61,7 @@ final class Lesson extends \common\SimpleObject {
 		$this->l10n->save();
 	}
 	
-	static function getList($courseId) {
+	static function getList($courseId=NULL) {
 
 	    $result = parent::getList("SELECT * FROM `".self::TABLE."` WHERE `course_id`=".intval($courseId)." ORDER BY `".self::ORDER_FIELD_NAME."`");
 		$l10nList = LessonL10n::getListByIds(array_keys($result));

@@ -26,6 +26,11 @@ final class Course extends \common\SimpleObject {
 
 	use \common\entity;
 
+	function __construct($courseId=NULL) {
+	    parent::__construct($courseId);
+	    $this->l10n  = new CourseL10n($this->id);
+	}
+
 	function loadDataFromArray($data) {
 		$this->id         = intval($data['id']);
 		$this->ownerId    = intval($data['owner_id']);

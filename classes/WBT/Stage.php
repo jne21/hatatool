@@ -57,7 +57,7 @@ use \common\entity;
      * @param string $stageId - код Этапа. Необязательно.
      */
     function __construct($stageId = NULL) {
-        parent::__construct();
+        parent::__construct($stageId);
         $this->l10n  = new StageL10n($this->id);
     }
     
@@ -79,7 +79,7 @@ use \common\entity;
      * @param unknown $lessonId
      * @return array
      */
-    static function getList($lessonId) {
+    static function getList($lessonId=NULL) {
     	$result = parent::getList("SELECT * FROM `".self::TABLE."` WHERE `lesson_id`=".intval($lessonId)." ORDER BY `".self::ORDER_FIELD_NAME."`");
     	$l10nList = StageL10n::getListByIds(array_keys($result));
     	foreach ($result as $stageId=>$stage) {
