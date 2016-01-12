@@ -3,7 +3,7 @@ namespace WBT;
 
 use \common\Registry;
 
-final class Exercise {
+final class Exercise extends \common\SimpleObject {
 
 	const
 		TABLE = 'exercise',
@@ -13,16 +13,6 @@ final class Exercise {
 	public
 		$id, $name, $description, $script;
 
-	function __construct($entityId = NULL) {
-		if ($id = intval($entityId)) {
-			$db = Registry::getInstance()->get(self::DB);
-			$rs = $db->query("SELECT * FROM `".self::TABLE."` WHERE `id`=$id");
-			if ($sa = $db->fetch($rs)) {
-				$this->loadDataFromArray($sa);
-			}
-		}
-	}
-	
 	function loadDataFromArray($data) {
 		$this->id          = $data['id'];
 		$this->name        = $data['name'];
@@ -43,24 +33,6 @@ final class Exercise {
 		else {
 			$db->insert(self::TABLE, $record);
 			$this->id = $db->insertId();
-		}
-	}
-	
-	static function getList() {
-		$result = [];
-		$db = Registry::getInstance()->get(self::DB);
-		$rs = $db->query("SELECT * FROM `".self::TABLE."` ORDER BY `name`");
-		while ($sa = $db->fetch($rs)) {
-			$entity = new Exercise;
-			$entity->loadDataFromArray($sa);
-			$result[$sa['id']] = $entity;
-		}
-		return $result;
-	}
-	
-	static function delete($entityId) {
-		if ($id = intval($entityId)) {
-			$db = Registry::getInstance()->get(self::DB)->query("DELETE FROM `".self::TABLE."` WHERE `id`=$id");
 		}
 	}
 

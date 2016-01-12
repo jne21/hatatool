@@ -9,7 +9,7 @@ use WBT\CourseL10n;
 #use Module;
 #use Exercise;
 
-final class Course {
+final class Course extends \common\SimpleObject {
 
 	const
 		TABLE = 'course',
@@ -26,17 +26,6 @@ final class Course {
 
 	use \common\entity;
 
-	function __construct($courseId = NULL, $ignoreHidden = self::VISIBLE) {
-		if ($id = intval($courseId)) {
-			$db = Registry::getInstance()->get(self::DB);
-			$rs = $db->query("SELECT * FROM `".self::TABLE."` WHERE `id`=$id");
-			if ($sa = $db->fetch($rs)) {
-				$this->loadDataFromArray($sa);
-			}
-		}
-		$this->l10n  = new CourseL10n($this->id);
-	}
-	
 	function loadDataFromArray($data) {
 		$this->id         = intval($data['id']);
 		$this->ownerId    = intval($data['owner_id']);
@@ -88,12 +77,7 @@ final class Course {
 		else {
 			$sql = 	"SELECT * FROM `".self::TABLE."` ORDER BY `".self::ORDER_FIELD_NAME."`";
 		}
-		$rs = $db->query($sql);
-		while ($sa = $db->fetch($rs)) {
-			$course = new Course();
-			$course->loadDataFromArray($sa);
-			$result[$sa['id']] = $course;
-		}
+        $result = parent::getList($sql);
 		$l10nList = CourseL10n::getListByIds(array_keys($result));
 		foreach ($result as $courseId=>$course) {
 			$result[$courseId]->l10n = $l10nList[$courseId];
@@ -104,7 +88,7 @@ final class Course {
 	static function delete($courseId) {
 		if ($id = intval($courseId)) {
 			CourseL10n::deleteAll(CourseL10n::TABLE, $courseId);
-			$db = Registry::getInstance()->get(self::DB)->query("DELETE FROM `".self::TABLE."` WHERE `id`=$id");
+			parent::delete($id);
 		}
 	}
 	

@@ -2,7 +2,7 @@
 
 namespace common;
 
-class RedirectQuery {
+class RedirectQuery extends SimpleObject {
 
     const
         DB = 'db',
@@ -20,16 +20,6 @@ class RedirectQuery {
         $REDIRECT_QUERY_STRING
     ;
         
-    function __construct($instanceId = NULL) {
-        if ($id = intval($instanceId)) {
-            $db = Registry::getInstance()->get('db');
-            $rs = $db->query("SELECT * FROM `".self::TABLE."` WHERE `id`=$id");
-            if ($sa = $db->fetch($rs)) {
-                $this->loadDataFromArray($sa);
-            }
-        }
-    }
-
     function loadDataFromArray($data) {
         $this->id = $data['id'];
         $this->redirectId = $data['redirect_id'];
@@ -42,17 +32,7 @@ class RedirectQuery {
     }
 
     static function getList($redirectId) {
-        $list = [];
-        if ($id = intval($redirectId)) {
-            $db = Registry::getInstance()->get('db');
-            $rs = $db->query("SELECT * FROM `".self::TABLE."` WHERE `redirect_id`=$id ORDER BY `date`");
-            while($data = $db->fetch($rs)) {
-                $entity = new RedirectQuery();
-                $entity->loadDataFromArray($data);
-                $list[$entity->id] = $entity;
-            }
-        }
-        return $list;
+        return parent::getList("SELECT * FROM `".self::TABLE."` WHERE `redirect_id`=$id ORDER BY `date`");
     }
 
     static function register($redirectId) {

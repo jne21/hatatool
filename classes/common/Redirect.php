@@ -4,7 +4,7 @@ namespace common;
 
 use common\RedirectQuery;
 
-class Redirect {
+class Redirect extends SimpleObject {
 
     const
         EXPIRATION_MONTHES = 6,
@@ -27,20 +27,6 @@ class Redirect {
     use \common\entity;
     
     /**
-     * Создание экземпляра редиректа из БД.
-     * @param int $instanceId
-     */
-    function __construct($instanceId = NULL) {
-        if ($id = intval($instanceId)) {
-            $db = Registry::getInstance()->get('db');
-            $rs = $db->query("SELECT * FROM `".self::TABLE."` WHERE `id`=$id");
-            if ($sa = $db->fetch($rs)) {
-                $this->loadDataFromArray($sa);
-            }
-        }
-    }
-
-    /**
      * Загрузка данных в объект из внешнего массива.
      * @param array $data
      */
@@ -59,16 +45,8 @@ class Redirect {
      * Получение списка редиректов в виде массива объектов
      * @return multitype:\common\Redirect[]
      */
-    static function getList() {
-        $list = [];
-        $db = Registry::getInstance()->get('db');
-        $rs = $db->query("SELECT * FROM `".self::TABLE."` ORDER BY `".self::ORDER_FIELD_NAME."`");
-        while($data = $db->fetch($rs)) {
-            $entity = new Redirect();
-            $entity->loadDataFromArray($data);
-            $list[$entity->id] = $entity;
-        }
-        return $list;
+    static function getList($fake=NULL) {
+        return parent::getList("SELECT * FROM `".self::TABLE."` ORDER BY `".self::ORDER_FIELD_NAME."`");
     }
 
     /**
@@ -109,51 +87,12 @@ class Redirect {
     }
     
     /**
-     * Удаление редиректа из БД
-     * @param unknown $id Идентификатор редиректа
-     */
-    static function delete($entityId) {
-    	if ($id = intval($entityId)) {
-            $db = Registry::getInstance()->get('db');
-    	    $rs = $db->query("SELECT `".self::ORDER_FIELD_NAME."` FROM `".self::TABLE."` WHERE `id`=$id");
-            if ($sa = $db->fetch($rs)) {
-                $db->query("DELETE FROM `".self::TABLE."` WHERE `id`=$id");
-			    $db->update(
-			            self::TABLE,
-			            [
-			                    self::ORDER_FIELD_NAME => $db::makeForcedValue('`'.self::ORDER_FIELD_NAME.'`-1')
-                        ],
-			            "`".self::ORDER_FIELD_NAME."`>={$sa[self::ORDER_FIELD_NAME]}"
-			    );
-		    }
-        }
-    }
-
-    /**
      * Удаление истории запросов для заданного редиректа
      * @param int $entityId Идентификатор редиректа
      */
     static function purge($entityId) {
         RedirectQuery::purge($entityId);
         self::updateValue($entityId, 'date_request', NULL);
-    }
-    /**
-     * Standard setter
-     * @param string $property Property name
-     * @param string $value New property value
-     * @return \common\Redirect
-     */
-    function set($property, $value) {
-        $this->$property = $value;
-        return $this;
-    }
-    
-    /**
-     * Standard getter
-     * @param string $property Property name
-     */
-    function get($property) {
-        return $this->$property;
     }
 
 }

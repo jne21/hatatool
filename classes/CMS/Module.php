@@ -2,7 +2,7 @@
 namespace CMS;
 use \common\Registry;
 
-class Module {
+class Module extends \common\SimpleObject {
 
 	public
 		$id   = NULL,
@@ -18,17 +18,11 @@ class Module {
 
 	use \common\entity;
 	
-	function __construct($moduleId) {
-		$db = Registry::getInstance()->get('db');
-		if ($id = intval($moduleId)) {
-			$rs = $db->query("SELECT * FROM `".self::TABLE."` WHERE id=$id");
-			if ($sa = $db->fetch($rs)) {
-				$this->id    = $id;
-				$this->name  = $sa['name'];
-				$this->url   = $sa['url'];
-				$this->path  = $sa['path'];
-			}
-		}
+    function loadDataFromArray($data) {
+	    $this->id    = $data['id'];
+		$this->name  = $data['name'];
+		$this->url   = $data['url'];
+		$this->path  = $data['path'];
 	}
 
 	function save() {
@@ -47,31 +41,8 @@ class Module {
 		}
 	}
 
-	static function getList() {
-		$db = Registry::getInstance()->get('db');
-		$rs = $db->query("SELECT * FROM `".self::TABLE."` ORDER BY `".self::ORDER_FIELD_NAME."`");
-		$items = array ();
-		while($sa = $db->fetch($rs)) {
-			$items[] = $sa;
-		}
-		return $items;
-	}
-
-	static function delete($moduleId) {
-		if ($id = intval($moduleId)) {
-			$db = Registry::getInstance()->get('db');
-			$rs = $db->query("SELECT `".self::ORDER_FIELD_NAME."` FROM `".self::TABLE."` WHERE `id`=$id");
-			if ($sa = $db->fetch($rs)) {
-				$db->query("DELETE FROM `".self::TABLE."` WHERE id=$id");
-				$db->update(
-					self::TABLE,
-				        [
-					        self::ORDER_FIELD_NAME => $db->makeForcedValue('`'.self::ORDER_FIELD_NAME.'`-1')
-					    ],
-					    "`".self::ORDER_FIELD_NAME."`>={$sa[self::ORDER_FIELD_NAME]}"
-				);
-			}
-		}
+	static function getList($dumy = NULL) {
+        return parent::getList("SELECT * FROM `".self::TABLE."` ORDER BY `".self::ORDER_FIELD_NAME."`");
 	}
 
 }

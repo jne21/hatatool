@@ -3,13 +3,8 @@ namespace WBT;
 
 use \common\Registry;
 use WBT\LessonL10n;
-#use Lesson;
-#use Stage;
-#use Stage;
-#use Module;
-#use Exercise;
 
-final class Lesson {
+final class Lesson extends \common\SimpleObject {
 
 	const
 		TABLE = 'lesson',
@@ -26,13 +21,9 @@ final class Lesson {
 
 	use \common\entity;
 
-	function __construct($courseId = NULL, $ignoreHidden = self::VISIBLE) {
-		if ($id = intval($courseId)) {
-			$db = Registry::getInstance()->get(self::DB);
-			$rs = $db->query("SELECT * FROM `".self::TABLE."` WHERE `id`=$id");
-			if ($sa = $db->fetch($rs)) {
-				$this->loadDataFromArray($sa);
-			}
+	function __construct($courseId = NULL) {
+	    if ($id = intval($courseId)) {
+            parent::__construct($id);
 		}
 		$this->l10n  = new LessonL10n($this->id);
 	}
@@ -73,15 +64,8 @@ final class Lesson {
 	}
 	
 	static function getList($courseId) {
-		$result = [];
-		$db = Registry::getInstance()->get(self::DB);
-	
-		$rs = $db->query("SELECT * FROM `".self::TABLE."` WHERE `course_id`=".intval($courseId)." ORDER BY `".self::ORDER_FIELD_NAME."`");
-		while ($sa = $db->fetch($rs)) {
-			$lesson = new Lesson();
-			$lesson->loadDataFromArray($sa);
-			$result[$sa['id']] = $lesson;
-		}
+
+	    $result = parent::getList("SELECT * FROM `".self::TABLE."` WHERE `course_id`=".intval($courseId)." ORDER BY `".self::ORDER_FIELD_NAME."`");
 		$l10nList = LessonL10n::getListByIds(array_keys($result));
 		foreach ($result as $lessonId=>$lesson) {
 			$result[$lessonId]->l10n = $l10nList[$lessonId];
@@ -90,22 +74,12 @@ final class Lesson {
 	}
 	
 	static function delete($lessonId) {
-		$lesson = new Lesson($lessonId);
-		if ($lesson->id) {
-			LessonL10n::deleteAll(LessonL10n::TABLE, $lesson->id);
-#			Stage::deleteAll($lesson->id);
-			$db = Registry::getInstance()->get(self::DB);
-			$db->query("DELETE FROM `".self::TABLE."` WHERE `id`=".$lesson->id) or die($db->lastError);
-			$db->update(
-				self::TABLE,
-				[self::ORDER_FIELD_NAME => $db->makeForcedValue("`".self::ORDER_FIELD_NAME."`-1")],
-				'`course_id`='.$lesson->courseId.' AND `'.self::ORDER_FIELD_NAME.'`>'.$lesson->order
-			);
-		}
+		LessonL10n::deleteAll(LessonL10n::TABLE, $lesson->id);
+	    parent::delete($lessonId);
 	}
 	
-	static function setState($courseId, $state) {
-		self::updateValue($courseId, 'state', $state);
+	static function setState($lessonId, $state) {
+		self::updateValue($lessonId, 'state', $state);
 	}
 
 }
