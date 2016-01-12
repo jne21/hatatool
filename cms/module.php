@@ -19,13 +19,10 @@ $listItems = '';
 foreach ($list as $line) {
 	$listItems .= $tpli->apply (
 		array (
-			'id'      => $line['id'],
-			'name'    => $line['name'],
-			'url'     => $line['url'],
-			'path'    => $line['path'],
-			'num'     => $line['num'],
-			'is_up'   => $line['num'] > 1,
-			'is_dn'   => $line['num'] < $cnt
+			'id'      => $line->id,
+			'name'    => $line->name,
+			'url'     => $line->url,
+			'path'    => $line->path
 		)
 	);
 }
