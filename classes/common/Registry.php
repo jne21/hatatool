@@ -1,5 +1,5 @@
 <?php
-namespace common {
+namespace common;
 
 /**
  * Simple memory cache singleton
@@ -11,11 +11,11 @@ class Registry {
 	 */
 	protected $objects = array();
 
-	/**
-	 * Prevents the creation of entities
-	 */
-	private function __construct() {
-	}
+	/** Prevents the creation of entity */
+	private function __construct() {}
+
+	/** Prevents the cloning of entity */
+	private function __clone() {}
 
 	/**
 	 * Get cache singleton instance
@@ -64,5 +64,4 @@ class Registry {
 		return $this->objects[$name][$index];
 	}
 
-}
 }
