@@ -6,40 +6,17 @@ use common\Registry;
 
 class StageL10n extends L10n {
 	const
+		DB = 'db',
 		TABLE = 'stage_l10n'
 	;
 
-	public
-		$parentId
-	;
-
-	function __construct($parentId=NULL) {
-		parent::__construct(self::TABLE, $parentId);
-	}
-	
 	function loadDataFromArray($localeId, $array) {
-		$this->set('name',        $array['name'],          $localeId);
-		$this->set('meta',        $array['meta'],          $localeId);
-		$this->set('description', $array['description'],   $localeId);
-		$this->set('brief',       $array['brief'],         $localeId);
-		$this->set('url',         $array['url'],           $localeId);
-		$this->set('title',       $array['title'],         $localeId);
-	}
-
-	static function getListByIds($idList) {
-		$result = [];
-		if (is_array($idList) && count($idList)) {
-			$ids = array_map('intval', $idList);
-			foreach($l = parent::loadByParentIds(self::TABLE, $ids) as $parentId=>$l10nData) {
-				$l10n = new StageL10n();
-				$l10n->parentId = $parentId;
-				foreach ($l10nData as $localeId=>$l10nItem) {
-					$l10n->loadDataFromArray($localeId, $l10nItem);
-				}
-				$result[$parentId] = $l10n;
-			}
-		}
-		return $result;
+		$this->set('name',        $array['name'],          $localeId)
+            ->set('meta',        $array['meta'],          $localeId)
+            ->set('description', $array['description'],   $localeId)
+            ->set('brief',       $array['brief'],         $localeId)
+            ->set('url',         $array['url'],           $localeId)
+            ->set('title',       $array['title'],         $localeId);
 	}
 
 	function save() {
@@ -53,7 +30,7 @@ class StageL10n extends L10n {
 				'title'       => $this->get('title',       $locale)
 			];
 		}
-		parent::saveData($this->parentId, self::TABLE, $data);
+		parent::saveData($this->parentId, $data);
 	}
 
 }

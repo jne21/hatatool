@@ -3,45 +3,38 @@ namespace common;
 
 use common\Registry;
 
-class L10n {
-	const
-		DB = 'db'
-	;
-
-	/**
-	 * Хранилище массива локализации
-	 * @var array
-	 */
-	public
-		$data
-	;
+abstract class L10n {
+    
+    public $id, $parentId;
+    
+	/** @var array Хранилище массива локализации */
+	public $data;
 
 	/**
 	 * Создание экземпляра объекта локализации
-	 * @param string $tableName Имя таблицы 
 	 * @param int $parentId Идентификатор родительской сущности 
 	 */
-	function __construct($tableName, $parentId = NULL) {
+	function __construct($parentId = NULL) {
 		if ($id = intval($parentId)) {
 			$this->parentId = $id;
 		}
-		foreach (self::load($tableName, intval($id)) as $item) {
+		foreach (self::load(intval($id)) as $item) {
 			$this->loadDataFromArray($item['locale_id'], $item);
 		}
 	}
 
+	abstract function loadDataFromArray($localeId, $array);
+	
 	/**
 	 * Загрузка из БД данных локализации заданной сущности
-	 * @param string $parentTable Имя таблицы БД для загрузки локализации
 	 * @param int $parentId Идентификатор родителя
 	 * @return array
 	 */
-	protected static function load($parentTable, $parentId=NULL) {
-		$registry = Registry::getInstance();
-		$db = $registry->get(self::DB);
+	protected static function load($parentId=NULL) {
+		$db = Registry::getInstance()->get(static::DB);
 		$result = [];
 		if ($id = intval($parentId)) {
-			$sql = "SELECT * FROM `$parentTable` WHERE `parent_id`=$id";
+			$sql = "SELECT * FROM `".static::TABLE."` WHERE `parent_id`=$id";
 			$rs = $db->query($sql);
 			while ($sa = $db->fetch($rs)) {
 				$result[] = $sa;
@@ -52,17 +45,31 @@ class L10n {
 
 	/**
 	 * Получение массива с данными локализации для группы сущностей
-	 * @param string $parentTable Имя таблицы БД
 	 * @param int[] $idList Массив идентификаторов родителей
 	 * @return array
 	 */
-	static function loadByParentIds($parentTable, $idList) {
+	static function getListByIds($idList) {
+	    $result = [];
+	    if (is_array($idList) && count($idList)) {
+	        $ids = array_map('intval', $idList);
+	        foreach($l = self::loadByParentIds($ids) as $parentId=>$l10nData) {
+	            $l10n = new static();
+	            $l10n->parentId = $parentId;
+	            foreach ($l10nData as $localeId=>$l10nItem) {
+	                $l10n->loadDataFromArray($localeId, $l10nItem);
+	            }
+	            $result[$parentId] = $l10n;
+	        }
+	    }
+	    return $result;
+	}
+	
+	private static function loadByParentIds($idList) {
 		$result = [];
 		if (is_array($idList) && count($idList)) {
-			$registry = Registry::getInstance();
-			$db = $registry->get(self::DB);
-			$ids = array_map('intval', $idList);
-			$sql = "SELECT * FROM `".$db->realEscapeString($parentTable)."` WHERE `parent_id` IN (".implode(',', $ids).")";
+            $db = Registry::getInstance()->get(static::DB);
+		    $ids = array_map('intval', $idList);
+			$sql = "SELECT * FROM `".static::TABLE."` WHERE `parent_id` IN (".implode(',', $ids).")";
 			$rs = $db->query($sql);
 			while ($sa = $db->fetch($rs)) {
 				$result[$sa['parent_id']][$sa['locale_id']] = $sa;
@@ -74,15 +81,14 @@ class L10n {
 	/**
 	 * Сохранение данных в БД
 	 * @param int $parentId Идентификатор родителя
-	 * @param string $parentTable Имя таблицы БД 
 	 * @param array $data
 	 */
-	static function saveData($parentId, $parentTable, $data) {
+	static function saveData($parentId, $data) {
 		$registry = Registry::getInstance();
-		$db = $registry->get(self::DB);
+		$db = $registry->get(static::DB);
 		foreach(array_keys($registry->get('locales')) as $locale) {
 			$db->replace (
-				$db->realEscapeString($parentTable),
+				static::TABLE,
 				array_merge(
 					[
 						'parent_id' => $parentId,
@@ -151,12 +157,14 @@ class L10n {
 	 * @param string $field Имя поля
 	 * @param string $value Присваимое значение
 	 * @param string $locale Идентификатор локализации
+	 * @return object
 	 */
 	function set($field, $value, $locale = NULL) {
 		if (!$locale) {
 			$locale = Registry::getInstance()->get('i18n_language'); 
 		}
 		$this->data[$locale][$field] = $value;
+		return $this;
 	}
 
 	/**
@@ -165,7 +173,7 @@ class L10n {
 	 * @param int $parentId Идентификатор родителя
 	 */
 	static function deleteAll($parentTable, $parentId) {
-		$db = Registry::getInstance()->get(self::DB);
-		$db->query("DELETE FROM `".$db->realEscapeString($parentTable)."` WHERE `parent_id`=".$db->escape($parentId));
+		$db = Registry::getInstance()->get(static::DB);
+		$db->query("DELETE FROM `".static::TABLE."` WHERE `parent_id`=".$db->escape($parentId));
 	} 
 }
