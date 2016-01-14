@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Янв 10 2016 г., 22:04
+-- Время создания: Янв 14 2016 г., 02:28
 -- Версия сервера: 10.0.21-MariaDB
 -- Версия PHP: 5.6.15
 
@@ -39,6 +39,13 @@ CREATE TABLE `admin` (
   `date_create` datetime NOT NULL,
   `locale` char(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `admin`
+--
+
+INSERT INTO `admin` (`id`, `name`, `email`, `login`, `password`, `state`, `description`, `rights`, `date_login`, `date_create`, `locale`) VALUES
+(1, 'Евгений Кутузов', 'wbt@jne21.com', 'jne', '6cb8cc8a9f63d1414411302c7fbd9c844d10e5df', 1, 'Executive developer', 0, NULL, '2016-01-03 00:00:00', 'uk');
 
 -- --------------------------------------------------------
 
@@ -116,6 +123,20 @@ CREATE TABLE `exercise` (
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `l10n`
+--
+
+CREATE TABLE `l10n` (
+  `object` varchar(100) NOT NULL,
+  `locale_id` char(2) NOT NULL,
+  `parent_id` int(10) UNSIGNED NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `value` mediumtext
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `lesson`
 --
 
@@ -180,12 +201,11 @@ CREATE TABLE `redirect` (
   `id` int(10) UNSIGNED NOT NULL,
   `source` varchar(255) NOT NULL,
   `destination` varchar(255) NOT NULL,
-  `regexp` tinyint(1) NOT NULL,
-  `num` int(10) UNSIGNED NOT NULL,
+  `order` int(10) UNSIGNED NOT NULL,
   `active` tinyint(1) NOT NULL,
   `status` int(11) NOT NULL,
-  `request_dt` datetime DEFAULT NULL,
-  `created_dt` datetime NOT NULL
+  `date_request` datetime DEFAULT NULL,
+  `date_create` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -197,7 +217,7 @@ CREATE TABLE `redirect` (
 CREATE TABLE `redirect_query` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `redirect_id` int(10) UNSIGNED NOT NULL,
-  `dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `HTTP_REFERER` varchar(255) DEFAULT NULL,
   `REMOTE_ADDR` varchar(15) DEFAULT NULL,
   `HTTP_USER_AGENT` text,
@@ -216,6 +236,13 @@ CREATE TABLE `setup` (
   `value` longtext NOT NULL,
   `description` text NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `setup`
+--
+
+INSERT INTO `setup` (`name`, `value`, `description`) VALUES
+('cms_locale', 'ru', 'Локализация административного интерфейса');
 
 -- --------------------------------------------------------
 
@@ -304,6 +331,15 @@ ALTER TABLE `exercise`
   ADD UNIQUE KEY `name` (`name`);
 
 --
+-- Индексы таблицы `l10n`
+--
+ALTER TABLE `l10n`
+  ADD PRIMARY KEY (`object`,`locale_id`,`parent_id`,`name`),
+  ADD KEY `object` (`object`,`locale_id`,`name`),
+  ADD KEY `parent_id` (`parent_id`);
+ALTER TABLE `l10n` ADD FULLTEXT KEY `value` (`value`);
+
+--
 -- Индексы таблицы `lesson`
 --
 ALTER TABLE `lesson`
@@ -334,7 +370,7 @@ ALTER TABLE `module`
 ALTER TABLE `redirect`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `source` (`source`),
-  ADD KEY `num` (`num`),
+  ADD KEY `num` (`order`),
   ADD KEY `active` (`active`);
 
 --
@@ -343,7 +379,7 @@ ALTER TABLE `redirect`
 ALTER TABLE `redirect_query`
   ADD PRIMARY KEY (`id`),
   ADD KEY `redirect_id` (`redirect_id`),
-  ADD KEY `dt` (`dt`);
+  ADD KEY `dt` (`date`);
 
 --
 -- Индексы таблицы `stage`
@@ -370,7 +406,7 @@ ALTER TABLE `stage_l10n`
 -- AUTO_INCREMENT для таблицы `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 --
 -- AUTO_INCREMENT для таблицы `attachment`
 --
@@ -380,37 +416,37 @@ ALTER TABLE `attachment`
 -- AUTO_INCREMENT для таблицы `course`
 --
 ALTER TABLE `course`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 --
 -- AUTO_INCREMENT для таблицы `exercise`
 --
 ALTER TABLE `exercise`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 --
 -- AUTO_INCREMENT для таблицы `lesson`
 --
 ALTER TABLE `lesson`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 --
 -- AUTO_INCREMENT для таблицы `module`
 --
 ALTER TABLE `module`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 --
 -- AUTO_INCREMENT для таблицы `redirect`
 --
 ALTER TABLE `redirect`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT для таблицы `redirect_query`
 --
 ALTER TABLE `redirect_query`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT для таблицы `stage`
 --
 ALTER TABLE `stage`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
@@ -440,10 +476,10 @@ ALTER TABLE `lesson_l10n`
   ADD CONSTRAINT `lesson_l10n_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `lesson` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ограничения внешнего ключа таблицы `redirect`
+-- Ограничения внешнего ключа таблицы `redirect_query`
 --
-ALTER TABLE `redirect`
-  ADD CONSTRAINT `redirect_ibfk_1` FOREIGN KEY (`id`) REFERENCES `redirect_query` (`redirect_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `redirect_query`
+  ADD CONSTRAINT `redirect_query_ibfk_1` FOREIGN KEY (`redirect_id`) REFERENCES `redirect` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `stage`

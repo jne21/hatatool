@@ -5,6 +5,8 @@ use common\Registry;
 
 abstract class L10n {
     
+    const TABLE = 'l10n';
+
     public $id, $parentId;
     
 	/** @var array Хранилище массива локализации */
@@ -108,14 +110,14 @@ abstract class L10n {
 	 * @param string $locale Идентификатор локализации. По умолчанию системный язык.
 	 * @return integer[]
 	 */
-	static function getParentIdsListByValue($parentTable, $field, $value, $locale=NULL) {
+	static function getParentIdsListByValue($field, $value, $locale=NULL) {
 		$registry = Registry::getInstance();
-		$db = $registry->get(self::DB);
+		$db = $registry->get(static::DB);
 		if (!$locale) {
 			$locale = $registry()->get('i18n_language'); 
 		}
 		$result = [];
-		$rs = $db->query("SELECT `parent_id` FROM `".$db->realEscapeString($parentTable)."` WHERE `".$db->realEscapeString($field)."`=".$db->escape($value));
+		$rs = $db->query("SELECT `parent_id` FROM `".static::TABLE."` WHERE `".$db->realEscapeString($field)."`=".$db->escape($value));
 		while ($sa = $db->fetch($rs)) {
 			$result[] = $sa['parent_id'];
 		}
