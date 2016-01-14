@@ -95,9 +95,8 @@ use \common\entity;
     }
 
     static function delete($stageId) {
-    	StageL10n::deleteAll(StageL10n::TABLE, $stage->id);
+    	StageL10n::deleteAll($stage->id);
         parent::delete($stageId);
-    
     }
 
 }

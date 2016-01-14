@@ -174,7 +174,7 @@ abstract class L10n {
 	 * @param string $parentTable Имя таблицы БД
 	 * @param int $parentId Идентификатор родителя
 	 */
-	static function deleteAll($parentTable, $parentId) {
+	static function deleteAll($parentId) {
 		$db = Registry::getInstance()->get(static::DB);
 		$db->query("DELETE FROM `".static::TABLE."` WHERE `parent_id`=".$db->escape($parentId));
 	} 

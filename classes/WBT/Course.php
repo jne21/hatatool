@@ -92,7 +92,7 @@ final class Course extends \common\SimpleObject {
 	
 	static function delete($courseId) {
 		if ($id = intval($courseId)) {
-			CourseL10n::deleteAll(CourseL10n::TABLE, $courseId);
+			CourseL10n::deleteAll($courseId);
 			parent::delete($id);
 		}
 	}

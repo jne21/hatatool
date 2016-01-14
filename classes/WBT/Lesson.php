@@ -72,7 +72,7 @@ final class Lesson extends \common\SimpleObject {
 	}
 	
 	static function delete($lessonId) {
-		LessonL10n::deleteAll(LessonL10n::TABLE, $lesson->id);
+		LessonL10n::deleteAll($lesson->id);
 	    parent::delete($lessonId);
 	}
 	
