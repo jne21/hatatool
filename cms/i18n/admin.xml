@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
 <i18n>
 	<token xml:id="title">
-		<uk>Адміністратори</uk>
-		<ru>Администраторы</ru>
+		<uk><![CDATA[Адміністратори]]></uk>
+		<ru><![CDATA[Администраторы]]></ru>
 	</token>
 	<token xml:id="append_mode">
-		<uk>Додання адміністратора</uk>
-		<ru>Добавление администратора</ru>
+		<uk><![CDATA[Додання адміністратора]]></uk>
+		<ru><![CDATA[Добавление администратора]]></ru>
 	</token>
 	<token xml:id="update_mode">
-		<uk>Редагування адміністратора</uk>
-		<ru>Редактирование администратора</ru>
+		<uk><![CDATA[Редагування адміністратора]]></uk>
+		<ru><![CDATA[Редактирование администратора]]></ru>
 	</token>
 	<token xml:id="state0">
-		<uk>Не активний</uk>
-		<ru>Не активен</ru>
+		<uk><![CDATA[Не активний]]></uk>
+		<ru><![CDATA[Не активен]]></ru>
 	</token>
 	<token xml:id="state1">
-		<uk>Активний</uk>
-		<ru>Активен</ru>
+		<uk><![CDATA[Активний]]></uk>
+		<ru><![CDATA[Активен]]></ru>
 	</token>
 	<token xml:id="login_title">
-		<uk>Керуючий інтерфейс</uk>
-		<ru>Управляющий интерфейс</ru>
+		<uk><![CDATA[Керуючий інтерфейс]]></uk>
+		<ru><![CDATA[Управляющий интерфейс]]></ru>
 	</token>
 	<token xml:id="error_limit_exceeded">
 		<uk><![CDATA[Перевищено ліміт помилок входу.<br />Вас заблоковано на 30 хвилин.]]></uk>
