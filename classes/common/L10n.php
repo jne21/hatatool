@@ -1,4 +1,5 @@
-<?
+<?php
+
 namespace common;
 
 use common\Registry;
@@ -33,14 +34,25 @@ abstract class L10n {
 	 * @return array
 	 */
 	protected static function load($parentId=NULL) {
-		$db = Registry::getInstance()->get(static::DB);
 		$result = [];
 		if ($id = intval($parentId)) {
-			$sql = "SELECT * FROM `".static::TABLE."` WHERE `parent_id`=$id";
-			$rs = $db->query($sql);
+            $db = Registry::getInstance()->get(static::DB);
+			$rs = $db->query("SELECT * FROM `".static::TABLE."` WHERE `parent_id`=$id");
 			while ($sa = $db->fetch($rs)) {
 				$result[] = $sa;
 			}
+/*
+            $data = [];
+            $rs = $db->query("SELECT * FROM `".self::TABLE."` WHERE `object`='".static::TABLE."' AND `parent_id`=$id");
+			while ($sa = $db->fetch($rs)) {
+                $data[$sa['locale_id']][$sa['name']]=$sa['value'];
+			}
+            foreach ($data as $localeId => $localeData) {
+                $localeData['locale_id'] = $localeId;
+                $localeData['parent_id'] = $id;
+                $result[]= $localeData;
+            }
+*/
 		}
 		return $result;
 	}
@@ -132,13 +144,13 @@ abstract class L10n {
 	 * @param string $locale Идентификатор локализации
 	 * @return boolean
 	 */
-	static function checkValueOriginality($parentTable, $field, $value, $locale=NULL) {
+	static function checkValueOriginality($field, $value, $locale=NULL) {
 		$registry = Registry::getInstance();
 		$db = $registry->get(self::DB);
 		if (!$locale) {
 			$locale = $registry()->get('i18n_language'); 
 		}
-		$rs = $db->query("SELECT IFNULL(COUNT(*), 0) FROM `".$db->realEscapeString($parentTable)."` WHERE `".$db->realEscapeString($field)."`=".$db->escape($value));
+		$rs = $db->query("SELECT IFNULL(COUNT(*), 0) FROM `".static::TABLE."` WHERE `".$db->realEscapeString($field)."`=".$db->escape($value));
 		return $db->result($rs, 0, 0)==0;
 	}
 
