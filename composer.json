@@ -1,27 +1,17 @@
 {
     "name": "jne21/hatatool",
-    "type": "library",
     "description": "Site engine",
-    "keywords": [],
-    "homepage": "https://github.com/jne21/hatatool",
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": ">4.3"
+    },
     "license": "MIT",
-    "require": {
-        "php": ">=5.4"
-    },
-    "autoload": {
-        "classmap": [
-            "classes/common/",
-            "classes/system/",
-            "classes/DB/"
-        ],
-        "files": [
-            "functions/"
-        ]
-    },
-    "minimum-stability": "dev",
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.0"
+    "authors": [
+        {
+            "name": "Eugene Kutuzov",
+            "email": "hatatool@jne21.com"
         }
-    }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
 }
