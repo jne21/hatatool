@@ -12,7 +12,7 @@
         "classmap": [
             "classes/common/",
             "classes/system/",
-            "classes/DB"
+            "classes/DB/"
         ],
         "files": [
             "functions/"
