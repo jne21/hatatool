@@ -14,7 +14,7 @@
         "files": [
             "functions/"
         ]
-    }
+    },
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
