@@ -1,0 +1,12 @@
+{
+    "autoload": {
+        "classmap": [
+            "classes/common/",
+            "classes/system/",
+            "classes/DB"
+        ],
+        "files": [
+            "functions/"
+        ]
+    }
+}
