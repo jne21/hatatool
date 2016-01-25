@@ -1,5 +1,10 @@
 {
     "name": "jne21/hatatool",
+    "type": "library",
+    "description": "Symfony Asset Component",
+    "keywords": [],
+    "homepage": "https://github.com/jne21/hatatool",
+    "license": "MIT",
     "autoload": {
         "classmap": [
             "classes/common/",
