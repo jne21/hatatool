@@ -1,4 +1,5 @@
 {
+    "name": "jne21/hatatool",
     "autoload": {
         "classmap": [
             "classes/common/",
