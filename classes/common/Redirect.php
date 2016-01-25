@@ -85,7 +85,7 @@ class Redirect extends SimpleObject {
             self::updateValue($id, 'date_request', date('Y-m-d H:i:s'));
         }
     }
-    
+
     /**
      * Удаление истории запросов для заданного редиректа
      * @param int $entityId Идентификатор редиректа
