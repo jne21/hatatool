@@ -10,7 +10,8 @@ class Redirect extends SimpleObject {
         EXPIRATION_MONTHES = 6,
         DB = 'db',
         TABLE = 'redirect',
-        ORDER_FIELD_NAME = 'order'        
+        ORDER_FIELD_NAME = 'order',
+        VISIBLE = 1
     ;
 
     public
@@ -45,8 +46,8 @@ class Redirect extends SimpleObject {
      * Получение списка редиректов в виде массива объектов
      * @return multitype:\common\Redirect[]
      */
-    static function getList($fake=NULL) {
-        return parent::getList("SELECT * FROM `".self::TABLE."` ORDER BY `".self::ORDER_FIELD_NAME."`");
+    static function getList($mode = NULL) {
+        return parent::getList("SELECT * FROM `".self::TABLE."`".($mode==self::VISIBLE ? ' WHERE `active`='.self::ACTIVE : '')." ORDER BY `".self::ORDER_FIELD_NAME."`");
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 function removedir($name) {
 	if (is_dir($name)) {
 		if ($dir = opendir($name)) {

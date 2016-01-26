@@ -17,8 +17,7 @@
             "DB\\": "classes/DB/"
         },
         "files": [
-            "functions/removedir.php",
-            "functions/router.php"
+            "functions/removedir.php"
         ]
     }
 }
