@@ -10,19 +10,15 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
-    "psr-4": {
-        "common\\": "classes/common/",
-        "system\\": "classes/system/",
-        "DB\\", "classes/DB/"
-    },
-    "classmap": [
-        "classes/common/",
-        "classes/system/",
-        "classes/DB/"
-    ],
-    "files": [
-        "functions/removedir.php",
-        "functions/router.php"
-    ]
+    "autoload" : {
+        "psr-0": {
+            "common\\": "classes/common/",
+            "system\\": "classes/system/",
+            "DB\\", "classes/DB/"
+        },
+        "files": [
+            "functions/removedir.php",
+            "functions/router.php"
+        ]
+    }
 }
