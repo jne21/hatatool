@@ -18,6 +18,6 @@
     ],
     "files": [
         "functions/removedir.php",
-        "functions/router.php
+        "functions/router.php"
     ]
 }
