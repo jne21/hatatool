@@ -12,9 +12,9 @@
     "minimum-stability": "dev",
     "require": {},
     "classmap": [
-        "classes/common",
-        "classes/system",
-        "classes/DB"
+        "classes/common/",
+        "classes/system/",
+        "classes/DB/"
     ],
     "files": [
         "functions/removedir.php",
