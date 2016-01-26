@@ -2,9 +2,6 @@
     "name": "jne21/hatatool",
     "description": "Site engine",
     "type": "library",
-    "require-dev": {
-        "phpunit/phpunit": ">4.3"
-    },
     "license": "MIT",
     "authors": [
         {
@@ -13,5 +10,14 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {}
+    "require": {},
+    "classmap": [
+        "classes/common",
+        "classes/system",
+        "classes/DB"
+    ],
+    "files": [
+        "functions/removedir.php",
+        "functions/router.php
+    ]
 }
