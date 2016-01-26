@@ -14,7 +14,7 @@
         "psr-0": {
             "common\\": "classes/common/",
             "system\\": "classes/system/",
-            "DB\\", "classes/DB/"
+            "DB\\": "classes/DB/"
         },
         "files": [
             "functions/removedir.php",
