@@ -16,6 +16,11 @@
             "system\\": "classes/system/",
             "DB\\": "classes/DB/"
         },
+        "classmap": [
+            "classes/common/",
+            "classes/system/",
+            "classes/DB/"
+        ],
         "files": [
             "functions/removedir.php"
         ]
