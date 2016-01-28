@@ -51,7 +51,7 @@ class Router {
 		return is_object($me) ? $me : $me = new self();
 	}
 
-	function route()
+	public function route()
 	{
 		$registry = Registry::getInstance();
 		foreach (Redirect::getList(Redirect::ACTIVE) as $redirect) {
@@ -71,7 +71,7 @@ class Router {
 		}
 	}
 
-	private static function getOriginalUrl ()
+	public static function getOriginalUrl ()
 	{
 		// Apache
 		if (strpos($_SERVER['SERVER_SOFTWARE'],'Apache') === 0) {
