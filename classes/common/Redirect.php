@@ -11,7 +11,7 @@ class Redirect extends SimpleObject {
         DB = 'db',
         TABLE = 'redirect',
         ORDER_FIELD_NAME = 'order',
-        VISIBLE = 1
+        ACTIVE = 1
     ;
 
     public
@@ -47,7 +47,7 @@ class Redirect extends SimpleObject {
      * @return multitype:\common\Redirect[]
      */
     static function getList($mode = NULL) {
-        return parent::getList("SELECT * FROM `".self::TABLE."`".($mode==self::VISIBLE ? ' WHERE `active`='.self::ACTIVE : '')." ORDER BY `".self::ORDER_FIELD_NAME."`");
+        return parent::getList("SELECT * FROM `".self::TABLE."`".($mode==self::ACTIVE ? ' WHERE `active`='.self::ACTIVE : '')." ORDER BY `".self::ORDER_FIELD_NAME."`");
     }
 
     /**

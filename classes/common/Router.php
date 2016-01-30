@@ -2,10 +2,10 @@
 
 namespace common;
 
-use Redirect;
-use RedirectQuery;
-use Registry;
-use Module;
+use \common\Redirect;
+use \common\RedirectQuery;
+use \common\Registry;
+use \common\Module;
 
 class Router {
 
@@ -53,6 +53,7 @@ class Router {
 
 	public function route()
 	{
+echo $module.'<br />'; die();
 		$registry = Registry::getInstance();
 		foreach (Redirect::getList(Redirect::ACTIVE) as $redirect) {
 			if (preg_match($redirect->source, $this->redirectSourceUrl)) {
@@ -63,11 +64,13 @@ class Router {
 				die();
 			}
 		}
-
+echo $module.'<br />'; die();
 		foreach (Module::getList() as $module) {
-			if (preg_match($module->path, substr($this->originalUrl, 1))) {
-				return new $module->className;
+			if (preg_match($module->url, substr($this->originalUrl, 1))) {
+				$controller = new $module->className . 'Controller';
+				$controller();
 			}
+			exit;
 		}
 	}
 
