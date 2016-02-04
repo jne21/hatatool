@@ -84,7 +84,7 @@ class Admin {
 			if ($this->newPassword) {
 				$person['password'] = self::passwordEncode($this->newPassword);
 			}
-			$db->update(self::TABLE, $person, "`id`=".$this->id);
+                        $db->update(self::TABLE, $person, "`id`=".$this->id);
 		}
 		else {
 			$this->dateCreate = time();
@@ -167,8 +167,8 @@ class Admin {
 
 	static function setProperty($personId, $propertyName, $value) {
 		if ($id = intval($personId)) {
-			$db = Registry::getInstance()->get(self::DB);
-			$db->update(self::TABLE, array ($propertyName => $value), 'id='.$id);
+                    $db = Registry::getInstance()->get(self::DB);
+                    $db->update(self::TABLE, array ($propertyName => $value), '`id`='.$id);
 		}
 	}
 

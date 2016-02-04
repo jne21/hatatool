@@ -32,6 +32,7 @@ class Router {
 		} else {
 			$this->protocol = 'http://';
 		}
+		$this->siteRoot = $this->protocol . $_SERVER['HTTP_HOST'] . '/';
 		$this->originalUrl = self::getOriginalUrl();
 		$this->parsedUrl = parse_url($site_protocol . $_SERVER['HTTP_HOST'] . $this->originalUrl);
 		$this->redirectSourceUrl = substr($this->parsedUrl['path'], 1);
@@ -53,7 +54,6 @@ class Router {
 
 	public function route()
 	{
-echo $module.'<br />'; die();
 		$registry = Registry::getInstance();
 		foreach (Redirect::getList(Redirect::ACTIVE) as $redirect) {
 			if (preg_match($redirect->source, $this->redirectSourceUrl)) {
@@ -64,13 +64,12 @@ echo $module.'<br />'; die();
 				die();
 			}
 		}
-echo $module.'<br />'; die();
 		foreach (Module::getList() as $module) {
 			if (preg_match($module->url, substr($this->originalUrl, 1))) {
-				$controller = new $module->className . 'Controller';
-				$controller();
+				$controllerName = $module->className . 'Controller';
+				$controller = new $controllerName;
+				exit;
 			}
-			exit;
 		}
 	}
 
