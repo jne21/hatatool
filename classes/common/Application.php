@@ -5,7 +5,7 @@ namespace common;
 use \common\Redirect;
 use \common\RedirectQuery;
 use \common\Registry;
-use \common\Module;
+use \common\Router;
 
 class Application {
 
@@ -64,9 +64,9 @@ class Application {
 				die();
 			}
 		}
-		foreach (Module::getList() as $module) {
-			if (preg_match($module->url, substr($this->originalUrl, 1))) {
-				$controllerName = $module->className . 'Controller';
+		foreach (Router::getList() as $router) {
+			if (preg_match($router->url, substr($this->originalUrl, 1))) {
+				$controllerName = $router->controller . 'Controller';
 				$controller = new $controllerName;
 				exit;
 			}

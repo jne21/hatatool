@@ -16,7 +16,7 @@ class Router extends \common\SimpleObject {
 		$id,
 		$name,
 		$url,
-		$className
+		$controller
 	;
 
 	use \common\entity;
@@ -29,7 +29,7 @@ class Router extends \common\SimpleObject {
 		$this->id    = $data['id'];
 		$this->name  = $data['name'];
 		$this->url   = $data['url'];
-		$this->className = $data['class_name'];
+		$this->controller = $data['controller'];
 	}
 
 	function save() {
@@ -37,7 +37,7 @@ class Router extends \common\SimpleObject {
 		$record = array (
 			'name'  => trim($this->name),
 			'url'   => trim($this->url),
-			'class_name'  => trim($this->className)
+			'controller'  => trim($this->controller)
 		);
 		if ($this->id) {
 			$db->update(self::TABLE, $record, "id=".$this->id);

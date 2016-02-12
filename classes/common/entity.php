@@ -5,19 +5,20 @@ trait entity {
 
 	/**
 	 * Ручная (пользовательская сортировка записей)
-	 * @param $orderedIds Array Массив первичных ключей и значения сортирующего поля.
-	 * @param $table String Идентификатор таблицы БД. По умолчанию задаётся внешней константой TABLE основного класса
-	 * @param $fieldName String Имя сортирующего поля
+	 * @param array $orderedIds Массив первичных ключей и значения сортирующего поля.
+	 * @param string $table Идентификатор таблицы БД. По умолчанию задаётся внешней константой TABLE основного класса
+	 * @param string $fieldName Имя сортирующего поля
+	 * @param string $filter Дополнительное условие WHERE для SQL-запроса
 	 * @return NULL
 	 **/
-	static function renumberAll($orderedIds, $table=NULL, $fieldName=self::ORDER_FIELD_NAME) {
+	static function renumberAll($orderedIds, $table=NULL, $fieldName=self::ORDER_FIELD_NAME, $filter='') {
 		$db = Registry::getInstance()->get(self::DB);
 		foreach($orderedIds as $index=>$id) {
 			if (intval($id)) {
 				$db->update(
 					$table ? $db->realEscapeString($table) : self::TABLE,
 					[$fieldName => intval($index)+1],
-					"`id` = $id"
+					"`id` = $id" . ($filter ? " AND $filter" : '')
 				);
 			}
 		}
