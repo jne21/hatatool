@@ -24,5 +24,8 @@
         "files": [
             "functions/removedir.php"
         ]
+    },
+    "require": {
+        "phpunit/phpunit": "^5.3"
     }
 }

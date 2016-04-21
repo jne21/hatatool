@@ -1,9 +1,11 @@
 <?php
+
 namespace DB;
 /**
  * Объект доступа к БД.
  */
-final class Mysqli {
+final class Mysqli
+{
 	const
 		DEFAULT_MODE = 0,
 		PRINT_MODE   = 2,
