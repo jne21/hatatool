@@ -7,7 +7,7 @@ class Record
     private $recordset;
     private $fields = [];
 
-    function __construct(AbstractDbRecordset $recordset, $data)
+    function __construct(AbstractRecordset $recordset, $data)
     {
         $this->recordset = $recordset;
         if (is_array($data)) {
@@ -29,8 +29,17 @@ class Record
         return $this->fields;
     }
 
-    function getValue() {
-        $keys = array_keys($this->fields);
-        return $this->fields[$keys[0]];
+    function getValue($key=0) {
+        if (array_key_exists($key, $this->fields)) {
+            $result = $this->fields[$key];
+        } else {
+            $keys = array_keys($this->fields);
+            if (is_numeric($key)) {
+                $result = $this->fields[$keys[$key]];
+            } else {
+                $result = $this->fields[$keys[0]];
+            }
+        }
+        return $result;
     }
 }

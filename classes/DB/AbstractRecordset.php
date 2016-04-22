@@ -4,8 +4,8 @@ namespace DB;
 
 abstract class AbstractRecordset
 {
-    private $db;
-    private $recordset;
+    protected $db;
+    protected $recordset;
     
     function __construct($db, $recordset)
     {

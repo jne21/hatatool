@@ -13,7 +13,7 @@ final class Db extends \DB\AbstractDb
     */
     function __construct($params) {
         if (is_array($params)) {
-            $this->connection = $this->connect($params);
+            $this->connect($params);
             if ($this->connection) {
                 if (array_key_exists(self::DB_NAME, $params)) {
                     $this->selectDb($params[self::DB_NAME]);
@@ -30,22 +30,24 @@ final class Db extends \DB\AbstractDb
         $result = mysqli_connect($params[self::HOST], $params[self::LOGIN], $params[self::PASSWORD]);
         if ($result) {
             $this->connection = $result;
+            if (array_key_exists(self::DB_NAME, $params)) {
+                $this->database = $this->selectDB($params[self::DB_NAME]);
+            }
         } else {
             $this->lastError = __METHOD__ . ': Connection error '. mysqli_error();
-        }
-        if (array_key_exists(self::DB_NAME, $params)) {
-            $this->database = $this->selectDB($params[self::DB_NAME]);
         }
     }
 
     /**
      * Устанавливает текущую БД.
-     * @param string $db_name имя БД.
+     * @param string $dbName имя БД.
      * @return unknown
      */
     function selectDB($dbName) {
         $result = mysqli_select_db($this->connection, $dbName);
-        if (!$result) {
+        if ($result) {
+            $this->database = $dbName;
+        } else {
             $this->lastError = __METHOD__ . ': Selection error' . mysqli_error($this->connection);
         }
         return $result;
@@ -54,13 +56,16 @@ final class Db extends \DB\AbstractDb
     /**
      * Выполняет запрос к БД.
      * @param string $sqlString SQL-команда.
-     * @param string $queryMode режим работы
      * @return resource результат выполнения запроса
      */
-    function query($sqlString, $queryMode=self::DEFAULT_MODE) {
+    function query($sqlString) {
         $this->lastError = '';
-        if ($queryMode & self::PRINT_MODE) echo(__METHOD__ . "($sqlString)");
-        if ($queryMode & self::STOP_MODE) die();
+        if ($this->debugMode & self::PRINT_MODE) {
+            echo(__METHOD__ . "($sqlString)");
+        }
+        if ($this->debugMode & self::STOP_MODE) {
+            die();
+        }
         $result = mysqli_query($this->connection, $sqlString);
         $this->lastError = __METHOD__ . ': ' . mysqli_error($this->connection);
         return $result;
@@ -112,15 +117,15 @@ final class Db extends \DB\AbstractDb
      * @param int $queryMode режим запроса
      * @return resource результат выполнения запроса
      */
-    function insert($table, $data, $queryMode=self::DEFAULT_MODE) {
+    function insert($table, $data) {
         $escapedData = $this->escape($data);
-        $result = $this->query("INSERT INTO `$table` (`".implode('`, `',array_keys($escapedData)).'`) VALUES ('.implode(', ',array_values($escapedData)).")", $queryMode);
+        $result = $this->query("INSERT INTO `$table` (`".implode('`, `',array_keys($escapedData)).'`) VALUES ('.implode(', ',array_values($escapedData)).")");
         return $result;
     }
 
-    function replace($table, $data, $queryMode=self::DEFAULT_MODE) {
+    function replace($table, $data) {
         $escapedData = $this->escape($data);
-        $result = $this->query("REPLACE `$table` (`".implode('`, `',array_keys($escapedData)).'`) VALUES ('.implode(', ',array_values($escapedData)).")", $queryMode);
+        $result = $this->query("REPLACE `$table` (`".implode('`, `',array_keys($escapedData)).'`) VALUES ('.implode(', ',array_values($escapedData)).")");
         return $result;
     }
 
@@ -130,22 +135,26 @@ final class Db extends \DB\AbstractDb
         return $this->affectedRows();
     }
 
-    function getRecordset($sql, $queryMode)
+    function getRecordset($sql)
     {
-        return new Recordset($this, $this->query($sql, $queryMode));
+        return new Recordset($this, $this->query($sql));
     }
 
-    function getRecord($sql, $queryMode)
+    function getRecord($sql, $rowNumber=0)
     {
-        return $this->getRecordset($sql, $queryMode)->fetch();
+        $recordset = $this->getRecordset($sql);
+        $recordset->seek(intval($rowNumber));
+        return $recordset->fetch();
     }
 
-    function getValues($sql, $queryMode)
+    function getValues($sql, $keyName=null)
     {
         $result = [];
-        $recordset = $this->getRecordset($sql, $queryMode);
+        $recordset = $this->getRecordset($sql);
         while($record = $recordset->fetch()) {
-            $result[] = $record->getValue();
+            $result[] = $record->getValue($keyName);
         }
+        return $result;
     }
+
 }

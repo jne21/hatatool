@@ -2,9 +2,8 @@
 
 namespace DB\Mysqli;
 
-class Recordset extends \DB\AbstractDbRecordset
+class Recordset extends \DB\AbstractRecordset
 {
-
     /**
      * Возвращает количество строк в SQL выборке
      * @param resource $resource
@@ -18,8 +17,13 @@ class Recordset extends \DB\AbstractDbRecordset
      */
     function fetch() {
         $record = mysqli_fetch_assoc($this->recordset);
-        $this->db->lastError = mysqli_error($this->db->connection);
-        return new DB\Record($record);
+        if ($record) {
+            $result = new \DB\Record($this, $record);
+        } else {
+            $result = null;
+            $this->db->lastError = mysqli_error($this->db->getConnection());
+        }
+        return $result;
     }
 
     /**
@@ -28,7 +32,7 @@ class Recordset extends \DB\AbstractDbRecordset
      */
     function seek($row) {
         $result = mysqli_data_seek($this->recordset, $row);
-        $this->db->lastError = mysqli_error($this->db->connection);
+        $this->db->lastError = mysqli_error($this->db->getConnection());
         return $result;
     }
 

@@ -27,14 +27,18 @@ abstract class AbstractDb
      * @var resource
      */
 
-    private $connection;
+    protected $connection;
     /**
      * Имя текущей БД.
      * @var string
      */
 
-    private $database;
+    protected $database;
+    protected $debugMode = self::DEFAULT_MODE;
 
+    function setDebugMode($mode) {
+        $this->debugMode = $mode;
+    }
 
     static function makeForcedValue($data) {
 	return self::DB_FORCED_VALUE_BEGIN.$data.self::DB_FORCED_VALUE_END;
@@ -114,29 +118,60 @@ abstract class AbstractDb
      * @param string $table имя таблицы
      * @param array $data ассоциативный массив данных для обновления.
      * @param string $whereString условие фильтрации
-     * @param string $queryMode режим запроса
      * @return int Количество обработанных записей
      */
-    abstract function update($table, $data, $whereString, $queryMode=self::DEFAULT_MODE);
+    abstract function update($table, $data, $whereString);
 
     /**
      * Выполняет SQL-вставку данных в таблицу.
      * @param string $table имя таблицы
      * @param array $data ассоциативный массив данных для вставки.
-     * @param string $queryMode режим запроса
      * @return int количество обработанных записей
      */
-    abstract function insert($table, $data, $queryMode=self::DEFAULT_MODE);
+    abstract function insert($table, $data);
 
     /**
      * Выполняет SQL-replace данных в таблицу.
      * @param string $table имя таблицы
      * @param array $data ассоциативный массив данных для вставки.
-     * @param string $queryMode режим запроса
      * @return int Количество обработанных записей
      */
-    abstract function replace($table, $data, $queryMode=self::DEFAULT_MODE);
-    abstract function getRecordset($sql, $queryMode=self::DEFAULT_MODE);
-    abstract function getValues($sql, $queryMode=self::DEFAULT_MODE);
-    abstract function getRecord($sql, $queryMode=self::DEFAULT_MODE);
+    abstract function replace($table, $data);
+
+    /**
+     * Выполняет SQL-запрос и возвращает объект DB\AbstractRecordset
+     * @param string $sql SQL-запрос
+     * @return DB\AbstractRecordset Количество обработанных записей
+     */
+    abstract function getRecordset($sql);
+
+    /**
+     * Выполняет SQL-запрос и возвращает массив из значений заданной колонки.
+     * @param string $sql SQL-запрос
+     * @param string $keyName название поля. По умолчанию - первое поле в Record.
+     * @return array Массив значений
+     */
+    abstract function getValues($sql, $keyName=null);
+
+    /**
+     * Выполняет SQL-запрос и возвращает строку с заданным номером.
+     * @param string $sql SQL-запрос
+     * @param int $row Номер строки.
+     * @return DB\Record
+     */
+    abstract function getRecord($sql, $rowNumber=0);
+
+    /**
+     * Выполняет SQL-запрос и возвращает заданное значение из строки с заданным номером.
+     * @param string $sql SQL-запрос
+     * @param int $row Номер строки.
+     * @param mixed $key Номер или имя поля
+     * @return DB\Record
+     */
+    function getValue($sql, $row=0, $key=0) {
+        $recordset = $this->getRecordset($sql);
+        $recordset->seek($row);
+        $record = $recordset->fetch();
+        return $record->getValue($key);
+    }
 }
