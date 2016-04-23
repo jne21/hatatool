@@ -27,8 +27,10 @@ class LoginError
 
     static function isBlocked()
     {
-        return self::LIMIT <= Registry::getInstance()->get('db')->getValue(
-            "SELECT IFNULL(COUNT(*), 0) AS `cnt` FROM `".self::TABLE."` WHERE `ip`=INET_ATON('{$_SERVER['REMOTE_ADDR']}') AND TIMESTAMPDIFF(MINUTE, `timestamp`, CURRENT_TIMESTAMP) < ".self::BLOCK_TIME
+        $db = Registry::getInstance()->get('db');
+        $ip = $db->escape($_SERVER['REMOTE_ADDR']);
+        return self::LIMIT <= $db->getValue(
+            "SELECT IFNULL(COUNT(*), 0) AS `cnt` FROM `".self::TABLE."` WHERE `ip`=INET_ATON($ip) AND TIMESTAMPDIFF(MINUTE, `timestamp`, CURRENT_TIMESTAMP) < ".self::BLOCK_TIME
         );
     }
 }
