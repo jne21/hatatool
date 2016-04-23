@@ -52,7 +52,7 @@ class Admin
         $this->capability = new Capability(self::TABLE, $this->id);
     }
 
-    function loadDataFromArray($data)
+    function load($data)
     {
         $this->id          = intval($data->id);
         $this->description = $data->description;
@@ -130,7 +130,7 @@ WHERE `C`.`object`='".self::TABLE."' AND `C`.`name`=".$db->escape($name)." AND `
     {
         $db = Registry::getInstance()->get(self::DB);
         $result = [];
-        $rs = $db->getRecordset("SELECT * FROM `".self::TABLE."` ORDER BY `name`");
+        $recordset = $db->getRecordset("SELECT * FROM `".self::TABLE."` ORDER BY `name`");
         while ($record = $recordset->fetch()) {
             $admin = new Admin;
             $admin->load($record);

@@ -4,7 +4,7 @@ namespace common;
 
 class Utils
 {
-    function removedir($name) {
+    static function removedir($name) {
         if (is_dir($name)) {
             if ($dir = opendir($name)) {
                 while (($file = readdir($dir)) !== false) {
@@ -25,7 +25,12 @@ class Utils
         }
     }
 
-    function d($var, $stop = false)
+    static function stripslashes_deep ($value)
+    {
+        return is_array($value) ? array_map('self::stripslashes_deep', $value) : stripslashes($value);
+    }
+
+    static function d($var, $stop = false)
     {
         echo '<pre>';
         var_dum($var, true);

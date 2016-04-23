@@ -23,7 +23,7 @@ abstract class L10n
             $this->parentId = $id;
         }
         foreach (self::loadData(intval($id)) as $data) {
-            $this->load($item['locale_id'], $data);
+            $this->load($data->locale_id, $data);
         }
     }
 
@@ -45,6 +45,9 @@ abstract class L10n
                 $result[] = $record;
             }
         }
+//        echo "\n\n\n\n";
+//var_dump($result);
+//        echo "\n\n\n\n";
         return $result;
     }
 
@@ -103,7 +106,7 @@ abstract class L10n
                     ],
                     $data[$localeId]
                 )
-            );
+            ) or die($db->lastError);
         }
     }
 
