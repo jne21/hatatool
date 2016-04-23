@@ -21,8 +21,5 @@
             "classes/system/",
             "classes/DB/"
         ],
-        "files": [
-            "functions/removedir.php"
-        ]
     }
 }
