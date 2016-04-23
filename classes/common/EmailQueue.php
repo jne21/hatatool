@@ -89,7 +89,8 @@ class EmailQueue
         }
     }
 
-    static function sendPacket($count = self::PACKET_SIZE) {
+    static function sendPacket($count = self::PACKET_SIZE)
+    {
         $list = self::getList($count);
         foreach ($list as $entity) {
             if ($entity->send()) {
