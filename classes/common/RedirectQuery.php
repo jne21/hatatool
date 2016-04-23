@@ -2,8 +2,8 @@
 
 namespace common;
 
-class RedirectQuery extends SimpleObject {
-
+class RedirectQuery extends SimpleObject
+{
     const
         DB = 'db',
         TABLE = 'redirect_query'
@@ -20,7 +20,8 @@ class RedirectQuery extends SimpleObject {
         $REDIRECT_QUERY_STRING
     ;
         
-    function loadDataFromArray($data) {
+    function load($data)
+    {
         $this->id = $data['id'];
         $this->redirectId = $data['redirect_id'];
         $this->date = strtotime($data['date']);
@@ -31,11 +32,13 @@ class RedirectQuery extends SimpleObject {
         $this->REDIRECT_QUERY_STRING = $data['REDIRECT_QUERY_STRING'];
     }
 
-    static function getList($redirectId) {
-        return parent::getList("SELECT * FROM `".self::TABLE."` WHERE `redirect_id`=$id ORDER BY `date`");
+    static function getList($redirectId)
+    {
+        return parent::getList("SELECT * FROM `".self::TABLE."` WHERE `redirect_id`=" . intval($redirectId) . " ORDER BY `date`");
     }
 
-    static function register($redirectId) {
+    static function register($redirectId)
+    {
         $record = [
             'redirect_id' => $this->redirectId,
             'HTTP_REFERER' => $_SERVER['HTTP_REFERER'],
@@ -47,16 +50,17 @@ class RedirectQuery extends SimpleObject {
         $db->insert(self::TABLE, $record);
     }
 
-    static function delete($entityId) {
+    static function delete($entityId)
+    {
         if ($id = intval($entityId)) {
             Registry::getInstance()->get('db')->query("DELETE FROM `".self::TABLE."` WHERE `id`=$id");
         }
     }
 
-    static function purge($redirectId) {
+    static function purge($redirectId)
+    {
         if ($id = intval($redirectId)) {
             Registry::getInstance()->get('db')->query("DELETE FROM `".self::TABLE."` WHERE `redirect_id`=$id");
         }
     }
-    
 }

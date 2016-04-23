@@ -6,7 +6,6 @@ use common\Registry;
 
 abstract class L10n
 {
-
     const TABLE = 'l10n';
 
     public $id, $parentId;
@@ -23,12 +22,12 @@ abstract class L10n
         if ($id = intval($parentId)) {
             $this->parentId = $id;
         }
-        foreach (self::load(intval($id)) as $item) {
-            $this->loadDataFromArray($item['locale_id'], $item);
+        foreach (self::loadData(intval($id)) as $data) {
+            $this->load($item['locale_id'], $data);
         }
     }
 
-    abstract function loadDataFromArray($localeId, $array);
+    abstract function load($localeId, $data);
     abstract function getLocales();
 
     /**
@@ -36,27 +35,15 @@ abstract class L10n
      * @param int $parentId Идентификатор родителя
      * @return array
      */
-    protected static function load($parentId=NULL)
+    protected static function loadData($parentId=NULL)
     {
         $result = [];
         if ($id = intval($parentId)) {
             $db = Registry::getInstance()->get(static::DB);
-            $rs = $db->query("SELECT * FROM `".static::TABLE."` WHERE `parent_id`=$id");
-            while ($sa = $db->fetch($rs)) {
-                $result[] = $sa;
+            $recordset = $db->getRecordset("SELECT * FROM `".static::TABLE."` WHERE `parent_id`=$id");
+            while ($record = $recordset->fetch()) {
+                $result[] = $record;
             }
-/*
-            $data = [];
-            $rs = $db->query("SELECT * FROM `".self::TABLE."` WHERE `object`='".static::TABLE."' AND `parent_id`=$id");
-            while ($sa = $db->fetch($rs)) {
-                $data[$sa['locale_id']][$sa['name']]=$sa['value'];
-            }
-            foreach ($data as $localeId => $localeData) {
-                $localeData['locale_id'] = $localeId;
-                $localeData['parent_id'] = $id;
-                $result[]= $localeData;
-            }
-*/
         }
         return $result;
     }
@@ -75,7 +62,7 @@ abstract class L10n
                 $l10n = new static();
                 $l10n->parentId = $parentId;
                 foreach ($l10nData as $localeId=>$l10nItem) {
-                    $l10n->loadDataFromArray($localeId, $l10nItem);
+                    $l10n->load($localeId, $l10nItem);
                 }
                 $result[$parentId] = $l10n;
             }
@@ -90,9 +77,9 @@ abstract class L10n
             $db = Registry::getInstance()->get(static::DB);
             $ids = array_map('intval', $idList);
             $sql = "SELECT * FROM `".static::TABLE."` WHERE `parent_id` IN (".implode(',', $ids).")";
-            $rs = $db->query($sql);
-            while ($sa = $db->fetch($rs)) {
-                $result[$sa['parent_id']][$sa['locale_id']] = $sa;
+            $recordset = $db->getRecordset($sql);
+            while ($record = $recordset->fetch()) {
+                $result[$record->parent_id][$record->locale_id] = $record;
             }
         }
         return $result;
@@ -136,11 +123,7 @@ abstract class L10n
             $locale = $registry()->get('i18n_language'); 
         }
         $result = [];
-        $rs = $db->query("SELECT `parent_id` FROM `".static::TABLE."` WHERE `".$db->realEscapeString($field)."`=".$db->escape($value));
-        while ($sa = $db->fetch($rs)) {
-            $result[] = $sa['parent_id'];
-        }
-        return $result;
+        return $db->getValues("SELECT `parent_id` FROM `".static::TABLE."` WHERE `".$db->realEscapeString($field)."`=".$db->escape($value));
     }
 
     /**
@@ -158,8 +141,7 @@ abstract class L10n
         if (!$locale) {
             $locale = $registry()->get('i18n_language'); 
         }
-        $rs = $db->query("SELECT IFNULL(COUNT(*), 0) FROM `".static::TABLE."` WHERE `".$db->realEscapeString($field)."`=".$db->escape($value));
-        return $db->result($rs, 0, 0)==0;
+        return 0==$db->getValue("SELECT IFNULL(COUNT(*), 0) FROM `".static::TABLE."` WHERE `".$db->realEscapeString($field)."`=".$db->escape($value));
     }
 
     /**
@@ -199,6 +181,6 @@ abstract class L10n
     static function deleteAll($parentId)
     {
         $db = Registry::getInstance()->get(static::DB);
-        $db->query("DELETE FROM `".static::TABLE."` WHERE `parent_id`=".$db->escape($parentId));
+        $db->delete(static::TABLE, $parentId, 'parent_id');
     }
 }

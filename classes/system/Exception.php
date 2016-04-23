@@ -1,15 +1,16 @@
 <?php
 namespace system;
 
-class ExceptionHandler {
+class ExceptionHandler
+{
 
-	public $debug = FALSE;
-	public $errorTypes = E_ALL & (~E_STRICT) & (~E_NOTICE);
+    public $debug = FALSE;
+    public $errorTypes = E_ALL & (~E_STRICT) & (~E_NOTICE);
 
-	protected $oldErrorHandler, $oldExceptionHandler;
-	protected $errorHandlerObject, $exceptionHandlerObject;
+    protected $oldErrorHandler, $oldExceptionHandler;
+    protected $errorHandlerObject, $exceptionHandlerObject;
 
-	protected static $errorNames = [
+    protected static $errorNames = [
 /*     1 */	E_ERROR             => 'E_ERROR',             // Фатальные ошибки времени выполнения. Это неустранимые средствами самого скрипта ошибки, такие как ошибка распределения памяти и т.п. Выполнение скрипта в таком случае прекращается. 	 
 /*     2 */	E_WARNING           => 'E_WARNING',           // Предупреждения времени выполнения (не фатальные ошибки). Выполнение скрипта в таком случае не прекращается. 	 
 /*     4 */	E_PARSE             => 'E_PARSE',             // Ошибки на этапе компиляции. Должны генерироваться только парсером. 	 
@@ -26,110 +27,110 @@ class ExceptionHandler {
 /*  8192 */	E_DEPRECATED        => 'E_DEPRECATED',        // Уведомления времени выполнения об использовании устаревших конструкций. Включаются для того, чтобы получать предупреждения о коде, который не будет работать в следующих версиях PHP. 	Начиная с PHP 5.3.0
 /* 16384 */	E_USER_DEPRECATED   => 'E_USER_DEPRECATED',   // Уведомления времени выполнения об использовании устаревших конструкций, сгенерированные пользователем. Такие уведомления схожи с E_DEPRECATED за исключением того, что они генерируются в коде скрипта, с помощью функции PHP trigger_error(). 	Начиная с PHP 5.3.0
 /* 32767 */	E_ALL               => 'E_ALL'                // Все поддерживаемые ошибки и предупреждения, за исключением ошибок E_STRICT до PHP 5.4.0. 	32767 в PHP 5.4.x, 30719 в PHP 5.3.x, 6143 в PHP 5.2.x, 2047 ранее 
-	];
-	
-	static function getErrorTypeName($errorCode) {
-		return self::$errorNames[$errorCode];
-	}
-	
-	/**
-	 * Обработчик стандартной ошибки
-	 * @param int $errorCode код ошибки
-	 * @param string $errorMessage текстовое сообщение об ошибке
-	 * @param string $errorfile файл, вызвавший ошибку
-	 * @param int $errorline номер строки
-	 * @param array $errorContext полное системное окружение  
-	 **/
-	public function handleError($errorCode, $errorMessage, $errorFile=NULL, $errorLine=NULL, $errorContext=NULL) {
-		if ($errorCode & $this->errorTypes) {
+    ];
+
+    static function getErrorTypeName($errorCode) {
+            return self::$errorNames[$errorCode];
+    }
+
+    /**
+     * Обработчик стандартной ошибки
+     * @param int $errorCode код ошибки
+     * @param string $errorMessage текстовое сообщение об ошибке
+     * @param string $errorfile файл, вызвавший ошибку
+     * @param int $errorline номер строки
+     * @param array $errorContext полное системное окружение
+     **/
+    public function handleError($errorCode, $errorMessage, $errorFile=NULL, $errorLine=NULL, $errorContext=NULL) {
+            if ($errorCode & $this->errorTypes) {
 //			echo '#'.__METHOD__.'#<br />';
-			$result = [
-				'errorCode'    => $errorCode,
-				'errorMessage' => $errorMessage,
-				'errorFile'    => $errorFile,
-				'errorLine'    => $errorLine,
-				'errorContext' => $errorContext,
-				'trace'        => debug_backtrace($this->debug ? NULL: DEBUG_BACKTRACE_IGNORE_ARGS)
-			];
-			$this->errorHandlerObject->output($result, $this->debug);
-	
-			ErrorHandlerOutputErrorLog::output ($result, $this->debug);
-		}
-		return TRUE;
-	}
+                    $result = [
+                            'errorCode'    => $errorCode,
+                            'errorMessage' => $errorMessage,
+                            'errorFile'    => $errorFile,
+                            'errorLine'    => $errorLine,
+                            'errorContext' => $errorContext,
+                            'trace'        => debug_backtrace($this->debug ? NULL: DEBUG_BACKTRACE_IGNORE_ARGS)
+                    ];
+                    $this->errorHandlerObject->output($result, $this->debug);
 
-	/**
-	 * Обработчик исключения
-	 * @param Exception $exception
-	 */
-	public function handleException($exception=NULL) {
+                    ErrorHandlerOutputErrorLog::output ($result, $this->debug);
+            }
+            return TRUE;
+    }
+
+    /**
+     * Обработчик исключения
+     * @param Exception $exception
+     */
+    public function handleException($exception=NULL) {
 //		echo '#'.__METHOD__.'#<br />';
-		$this->exceptionHandlerObject->output($exception, $this->debug);
-		ExceptionHandlerOutputErrorLog::output ($exception, $this->debug);
-		return TRUE;
-	}
-	
-	public function setupHandlers() {
-		$this->errorHandlerObject     = ErrorHandlerOutputFactory::getHandlerOutput();
-		$this->exceptionHandlerObject = ExceptionHandlerOutputFactory::getHandlerOutput();
-		
-		$this->oldErrorHandler     = set_error_handler     ([$this, 'handleError']);
-		$this->oldExceptionHandler = set_exception_handler ([$this, 'handleException']);
-	}
+            $this->exceptionHandlerObject->output($exception, $this->debug);
+            ExceptionHandlerOutputErrorLog::output ($exception, $this->debug);
+            return TRUE;
+    }
 
-	public static function restoreHandlers() {
-		set_error_handler($this->oldErrorHandler);
-		set_exception_handler($this->oldExceptionHandler);
-	}
+    public function setupHandlers() {
+            $this->errorHandlerObject     = ErrorHandlerOutputFactory::getHandlerOutput();
+            $this->exceptionHandlerObject = ExceptionHandlerOutputFactory::getHandlerOutput();
+
+            $this->oldErrorHandler     = set_error_handler     ([$this, 'handleError']);
+            $this->oldExceptionHandler = set_exception_handler ([$this, 'handleException']);
+    }
+
+    public static function restoreHandlers() {
+            set_error_handler($this->oldErrorHandler);
+            set_exception_handler($this->oldExceptionHandler);
+    }
 
 }
 
 class ExceptionHandlerOutputFactory {
 
-	public static function getHandlerOutput () {
-		if (php_sapi_name() == 'cli') {
-			return new ExceptionHandlerOutputCLI();
-		}
-		else {
-			if ($_SERVER['HTTP_ACCEPT']=='text/json') {
-				return new ExceptionHandlerOutputJSON();
-			}
-			else {
-				return new ExceptionHandlerOutputHTML();
-			}
-		}
-	}
+    public static function getHandlerOutput () {
+            if (php_sapi_name() == 'cli') {
+                    return new ExceptionHandlerOutputCLI();
+            }
+            else {
+                    if ($_SERVER['HTTP_ACCEPT']=='text/json') {
+                            return new ExceptionHandlerOutputJSON();
+                    }
+                    else {
+                            return new ExceptionHandlerOutputHTML();
+                    }
+            }
+    }
 }
 
 class ErrorHandlerOutputFactory {
 
-	public static function getHandlerOutput () {
-		if (php_sapi_name() == 'cli') {
-			return new ErrorHandlerOutputCLI();
-		}
-		else {
-			if ($_SERVER['HTTP_ACCEPT']=='text/json') {
-				return new ErrorHandlerOutputJSON();
-			}
-			else {
-				return new ErrorHandlerOutputHTML();
-			}
-		}
-	}
+    public static function getHandlerOutput () {
+            if (php_sapi_name() == 'cli') {
+                    return new ErrorHandlerOutputCLI();
+            }
+            else {
+                    if ($_SERVER['HTTP_ACCEPT']=='text/json') {
+                            return new ErrorHandlerOutputJSON();
+                    }
+                    else {
+                            return new ErrorHandlerOutputHTML();
+                    }
+            }
+    }
 }
 
 // ---------------------------------- Exception output -----------------------------------------------
 interface iExceptionHandlerOutput {
 //	public static function setTemplate($mixed);
-	public static function output($error, $debug);
+    public static function output($error, $debug);
 }
 
 class ExceptionHandlerOutputCLI implements iExceptionHandlerOutput {
 
 //	public static function setTemplate($template) {}
-	public static function output($exception, $debug) {
-		return 'CLI';
-	}
+    public static function output($exception, $debug) {
+            return 'CLI';
+    }
 }
 
 class ExceptionHandlerOutputHTML implements iExceptionHandlerOutput {
@@ -138,187 +139,187 @@ class ExceptionHandlerOutputHTML implements iExceptionHandlerOutput {
 //		echo __METHOD__.'<br />';
 //	}
 
-	public static function output($exception, $debug) {
-		$context = '';
-		foreach ($exception->getContext() as $key=>$value) {
-			$context .= $key.': '.print_r($value, TRUE).'<br />';
-		}
-		$trace = '';
-		foreach ($exception->getTrace() as $level=>$data) {
-			$args = '';
-			$escaped_args = array_map('htmlspecialchars', $data['args']);
+    public static function output($exception, $debug) {
+            $context = '';
+            foreach ($exception->getContext() as $key=>$value) {
+                    $context .= $key.': '.print_r($value, TRUE).'<br />';
+            }
+            $trace = '';
+            foreach ($exception->getTrace() as $level=>$data) {
+                    $args = '';
+                    $escaped_args = array_map('htmlspecialchars', $data['args']);
 //			foreach ($data['args'] as $arg) {
 //				$args = htmlspecialchars($arg).'<br />';
 //			}
-			$args = implode(', ', $escaped_args);
-			$trace =
-				'<br />#'.$level.' '.$data['file'].':'.$dataine['line'].'<br />'
-				.$data['class'].$data['type'].$data['function'].'('.$args.')'.'<br />';
-		}
+                    $args = implode(', ', $escaped_args);
+                    $trace =
+                            '<br />#'.$level.' '.$data['file'].':'.$dataine['line'].'<br />'
+                            .$data['class'].$data['type'].$data['function'].'('.$args.')'.'<br />';
+            }
 
-		$message =
+            $message =
 //			print_r($exception, true).
-			'<pre>'
-			.'Exception('.$exception->getCode().'): '.$exception->getMessage().'<br />'
-			.'Source: '.$exception->getFile().':'.$exception->getLine().'<br />'
-			.'Trace: '.$trace/*print_r($exception->getTrace(), true)*/.'<br />'
-			.(($debug && $context) ? 'Context:<br />'.$context : '');
+                    '<pre>'
+                    .'Exception('.$exception->getCode().'): '.$exception->getMessage().'<br />'
+                    .'Source: '.$exception->getFile().':'.$exception->getLine().'<br />'
+                    .'Trace: '.$trace/*print_r($exception->getTrace(), true)*/.'<br />'
+                    .(($debug && $context) ? 'Context:<br />'.$context : '');
 //$this->getPrevious() — Возвращает предыдущее исключение
 //$this->getTraceAsString — Получает трассировку стека в виде строки
-		echo $message;
-	}
+            echo $message;
+    }
 
 //	public static function setTemplate($template) {}
 }
 
 class ExceptionHandlerOutputJSON implements iExceptionHandlerOutput {
-	public static function output($exception, $debug) {
-		header('HTTP/1.0 500 Internal Server Error', true, 500);
-		header('Status: 500 Internal Server Error', true, 500);
-		$response = array(
-			'error' => true,
-			'message' => '',
-		);
-		if($debug){
-			$response['message'] = $exception->getMessage();
-		} else {
-			$response['message'] = self::$productionMessage;
-		}
-		exit(json_encode($response));
-	}
+    public static function output($exception, $debug) {
+            header('HTTP/1.0 500 Internal Server Error', true, 500);
+            header('Status: 500 Internal Server Error', true, 500);
+            $response = array(
+                    'error' => true,
+                    'message' => '',
+            );
+            if($debug){
+                    $response['message'] = $exception->getMessage();
+            } else {
+                    $response['message'] = self::$productionMessage;
+            }
+            exit(json_encode($response));
+    }
 }
 
 class ExceptionHandlerOutputErrorLog implements iExceptionHandlerOutput {
-	public static function output($exception, $debug) {
-		$context = '';
-		foreach ($exception->getContext() as $key=>$value) {
-			$context .= ' '.$key.': '.print_r($value, TRUE);
-		}
+    public static function output($exception, $debug) {
+            $context = '';
+            foreach ($exception->getContext() as $key=>$value) {
+                    $context .= ' '.$key.': '.print_r($value, TRUE);
+            }
 
-		error_log(
-			"Exception(".$exception->getCode()."): ".$exception->getMessage().' in '.$exception->getFile().':'.$exception->getLine()
-			.(
-				php_sapi_name() == 'cli'
-				? ''
-				: " Referer: {$_SERVER['REQUEST_URI']}"
-			)
-			.(
-				$context
-				? ' Context:'.$context
-				: ''
-			)
-		);
+            error_log(
+                    "Exception(".$exception->getCode()."): ".$exception->getMessage().' in '.$exception->getFile().':'.$exception->getLine()
+                    .(
+                            php_sapi_name() == 'cli'
+                            ? ''
+                            : " Referer: {$_SERVER['REQUEST_URI']}"
+                    )
+                    .(
+                            $context
+                            ? ' Context:'.$context
+                            : ''
+                    )
+            );
 
-	}
+    }
 }
 
 // ---------------------------------- Error output -----------------------------------------------
 interface iErrorHandlerOutput {
-	public static function output($error, $debug);
+    public static function output($error, $debug);
 }
 
 class ErrorHandlerOutputCLI implements iErrorHandlerOutput {
 
-	public static function output($error, $debug) {
-		echo
-			"Error ".ExceptionHandler::getErrorTypeName($error['errorCode'])."({$error['errorCode']}): \"{$error['errorMessage']}\" in {$error['errorFile']}: {$error['errorLine']}"
-			.(
-				$debug
-				? print_r($error['errorContext'])
-				: ''
-			);
-	}
+    public static function output($error, $debug) {
+            echo
+                    "Error ".ExceptionHandler::getErrorTypeName($error['errorCode'])."({$error['errorCode']}): \"{$error['errorMessage']}\" in {$error['errorFile']}: {$error['errorLine']}"
+                    .(
+                            $debug
+                            ? print_r($error['errorContext'])
+                            : ''
+                    );
+    }
 }
 
 class ErrorHandlerOutputHTML implements iErrorHandlerOutput {
 
-	function __construct() {
+    function __construct() {
 //		echo __METHOD__.'<br />';
-	}
+    }
 /*
-	public static function output($error, $debug) {
-		$result = print_r($error, 1);
-		echo "HTML-OUTPUT[$debug]($result)<br />";
-	}
+    public static function output($error, $debug) {
+            $result = print_r($error, 1);
+            echo "HTML-OUTPUT[$debug]($result)<br />";
+    }
 */
-	public static function output($error, $debug) {
-		$context = '';
-		foreach ($error['errorContext'] as $key=>$value) {
-			$context .= $key.': '.print_r($value, TRUE).'<br />';
-		}
-		$trace = '';
+    public static function output($error, $debug) {
+            $context = '';
+            foreach ($error['errorContext'] as $key=>$value) {
+                    $context .= $key.': '.print_r($value, TRUE).'<br />';
+            }
+            $trace = '';
 //echo '<pre>'.print_r($error['trace'], true);
-		foreach ($error['trace'] as $level=>$data) {
-			$args = '';
-			$escaped_args = array_map('htmlspecialchars', $data['args']);
+            foreach ($error['trace'] as $level=>$data) {
+                    $args = '';
+                    $escaped_args = array_map('htmlspecialchars', $data['args']);
 //			foreach ($data['args'] as $arg) {
 //				$args = htmlspecialchars($arg).'<br />';
 //			}
-			$args = implode(', ', $escaped_args);
-			$trace .=
-				'<br />#'.$level.' '.$data['file'].':'.$data['line'].'<br />'
-				.$data['class'].$data['type'].$data['function'].'('.$args.')'.'<br />';
-		}
+                    $args = implode(', ', $escaped_args);
+                    $trace .=
+                            '<br />#'.$level.' '.$data['file'].':'.$data['line'].'<br />'
+                            .$data['class'].$data['type'].$data['function'].'('.$args.')'.'<br />';
+            }
 
-		$message =
+            $message =
 //			print_r($exception, true).
-			'<pre>'
-			.'Error('.ExceptionHandler::getErrorTypeName($error['errorCode']).'): '.$error['errorMessage'].'<br />'
-			.'Source: '.$error['errorFile'].':'.$error['errorLine'].'<br />'
-			.'Trace: '.$trace/*print_r($exception->getTrace(), true)*/.'<br />'
-			.(($debug && $context) ? 'Context:<br />'.$context : '');
+                    '<pre>'
+                    .'Error('.ExceptionHandler::getErrorTypeName($error['errorCode']).'): '.$error['errorMessage'].'<br />'
+                    .'Source: '.$error['errorFile'].':'.$error['errorLine'].'<br />'
+                    .'Trace: '.$trace/*print_r($exception->getTrace(), true)*/.'<br />'
+                    .(($debug && $context) ? 'Context:<br />'.$context : '');
 //$this->getPrevious() — Возвращает предыдущее исключение
 //$this->getTraceAsString — Получает трассировку стека в виде строки
-		echo $message;
-	}
+            echo $message;
+    }
 
 }
 
 /**
- * Реализует вывод сообщения об ошибке при JSON запросе
- * @author Eugene
- *
- */
+* Реализует вывод сообщения об ошибке при JSON запросе
+* @author Eugene
+*
+*/
 class ErrorHandlerOutputJSON implements iErrorHandlerOutput {
 
-	public static function output($exception, $debug) {
-		header('HTTP/1.0 500 Internal Server Error', true, 500);
-		header('Status: 500 Internal Server Error', true, 500);
-		$response = array(
-			'error' => true,
-			'message' => '',
-		);
-		if($debug){
-			$response['message'] = $exception->getMessage();
-		} else {
-			$response['message'] = self::$productionMessage;
-		}
-		exit(json_encode($response));
-	}
+    public static function output($exception, $debug) {
+            header('HTTP/1.0 500 Internal Server Error', true, 500);
+            header('Status: 500 Internal Server Error', true, 500);
+            $response = array(
+                    'error' => true,
+                    'message' => '',
+            );
+            if($debug){
+                    $response['message'] = $exception->getMessage();
+            } else {
+                    $response['message'] = self::$productionMessage;
+            }
+            exit(json_encode($response));
+    }
 }
 
 class ErrorHandlerOutputErrorLog implements iErrorHandlerOutput {
-	public static function output($error, $debug) {
-		error_log(
-			"Error ".ExceptionHandler::getErrorTypeName($error['errorCode'])." ({$error['errorCode']}): \"{$error['errorMessage']}\" in {$error['errorFile']}: {$error['errorLine']}"
-			.(
-				php_sapi_name() == 'cli'
-				? ''
-				: " Referer: {$_SERVER['REQUEST_URI']}"
-			)
-			.(
-				$debug
-				? PHP_EOL.print_r($error['errorContext']).PHP_EOL
-				: ''
-			)
-		);
-	}
+    public static function output($error, $debug) {
+            error_log(
+                    "Error ".ExceptionHandler::getErrorTypeName($error['errorCode'])." ({$error['errorCode']}): \"{$error['errorMessage']}\" in {$error['errorFile']}: {$error['errorLine']}"
+                    .(
+                            php_sapi_name() == 'cli'
+                            ? ''
+                            : " Referer: {$_SERVER['REQUEST_URI']}"
+                    )
+                    .(
+                            $debug
+                            ? PHP_EOL.print_r($error['errorContext']).PHP_EOL
+                            : ''
+                    )
+            );
+    }
 }
 
 class BaseException extends \Exception {
 
-	function __construct($message, $code=0, $previous=NULL) {
-		parent::__construct($message, $code=0, $previous=NULL);
-	}
+    function __construct($message, $code=0, $previous=NULL) {
+            parent::__construct($message, $code=0, $previous=NULL);
+    }
 }
 ?>

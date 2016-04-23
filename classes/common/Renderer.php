@@ -2,17 +2,17 @@
 
 namespace common;
 
-use \common\Registry;
 use \common\Template;
 
-class Renderer {
-
+class Renderer
+{
     public
         $page,
         $content,
         $template;
 
-    function __construct($content, $page = null) {
+    function __construct($content, $page = null)
+    {
         $this->content = $content;
         if (isset($page)) {
             $this->page = $page;
@@ -23,7 +23,8 @@ class Renderer {
         }
     }
 
-    function loadPage() {
+    function loadPage()
+    {
         $this->updateContent([
             'content'  => $this->page->get('content'),
             'metaTags' => $this->page->get('metaTags'),
@@ -31,7 +32,8 @@ class Renderer {
         ]);
     }
 
-    function output() {
+    function output()
+    {
         foreach ($this->page->get('headers') as $header => $forced) {
             header($header, $forced);
         }
@@ -39,10 +41,10 @@ class Renderer {
         echo $this->content;
     }
 
-    function updateContent($data) {
+    function updateContent($data)
+    {
         $tpl = new Template($this->content);
         $this->content = $tpl->apply($data);
         return $this;
     }
-
 }

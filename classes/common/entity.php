@@ -1,8 +1,8 @@
-<?
+<?php
 namespace common;
 
-trait entity {
-
+trait entity
+{
     /**
      * Ручная (пользовательская сортировка записей)
      * @param array $orderedIds Массив первичных ключей и значения сортирующего поля.
@@ -11,7 +11,8 @@ trait entity {
      * @param string $filter Дополнительное условие WHERE для SQL-запроса
      * @return NULL
      **/
-    static function renumberAll($orderedIds, $table=NULL, $fieldName=self::ORDER_FIELD_NAME) {
+    static function renumberAll($orderedIds, $table=NULL, $fieldName=self::ORDER_FIELD_NAME)
+    {
         $db = Registry::getInstance()->get(self::DB);
         foreach($orderedIds as $index=>$id) {
             if (intval($id)) {
@@ -31,8 +32,10 @@ trait entity {
      * @param $value Новое значение
      * @return NULL
      **/
-    static function updateValue($pKey, $field, $value) {
-        if ($id = intval($pKey)) {
+    static function updateValue($pKey, $field, $value)
+    {
+        $id = intval($pKey);
+        if ($id) {
             $db = Registry::getInstance()->get(self::DB);
             $db->update (
                 self::TABLE,
@@ -48,7 +51,8 @@ trait entity {
      * @param $action Int Новое значение (1 или 0)
      * @return NULL
      **/
-    static function toggle($id, $action, $property='show') {
+    static function toggle($id, $action, $property='show')
+    {
         self::updateValue($id, $property, intval($action));
     }
 
@@ -58,9 +62,10 @@ trait entity {
      * @param $fieldName String Имя сортирующего поля
      * @return NULL
      **/
-    static function getNextOrderIndex($whereCondition = NULL, $fieldName=self::ORDER_FIELD_NAME) {
+    static function getNextOrderIndex($whereCondition = NULL, $fieldName=self::ORDER_FIELD_NAME)
+    {
         $db = Registry::getInstance()->get(self::DB);
-        return $db->result($db->query("SELECT IFNULL(MAX(`".$db->realEscapeString($fieldName)."`), 0)+1 FROM `".self::TABLE."`".($whereCondition ? " WHERE $whereCondition" : '')), 0, 0);
+        return $db->getValue("SELECT IFNULL(MAX(`".$db->realEscapeString($fieldName)."`), 0)+1 FROM `".self::TABLE."`".($whereCondition ? " WHERE $whereCondition" : ''));
     }
 
     /**
@@ -68,7 +73,8 @@ trait entity {
      * @param string $s
      * @return string
      */
-    static function transURL($s) {
+    static function transURL($s)
+    {
         $L['from'] = array(
             'Ж', 'Ц', 'Ч', 'Ш', 'Щ', 'Ы', 'Ю', 'Я', 'Ї',
             'ж', 'ц', 'ч', 'ш', 'щ', 'и', 'ю', 'я', 'ї',
