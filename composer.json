@@ -20,6 +20,6 @@
             "classes/common/",
             "classes/system/",
             "classes/DB/"
-        ],
+        ]
     }
 }
