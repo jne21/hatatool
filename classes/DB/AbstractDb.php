@@ -26,14 +26,14 @@ abstract class AbstractDb
      * Соединение с БД.
      * @var resource
      */
-
     protected $connection;
+
     /**
      * Имя текущей БД.
      * @var string
      */
-
     protected $database;
+
     protected $debugMode = self::DEFAULT_MODE;
 
     function setDebugMode($mode) {
@@ -41,11 +41,11 @@ abstract class AbstractDb
     }
 
     static function makeForcedValue($data) {
-	return self::DB_FORCED_VALUE_BEGIN.$data.self::DB_FORCED_VALUE_END;
+    return self::DB_FORCED_VALUE_BEGIN.$data.self::DB_FORCED_VALUE_END;
     }
 
     static function isForcedValue($data) {
-	return	(substr($data,0,strlen(self::DB_FORCED_VALUE_BEGIN))==self::DB_FORCED_VALUE_BEGIN && substr($data, -strlen(self::DB_FORCED_VALUE_END))==self::DB_FORCED_VALUE_END);
+    return (substr($data,0,strlen(self::DB_FORCED_VALUE_BEGIN))==self::DB_FORCED_VALUE_BEGIN && substr($data, -strlen(self::DB_FORCED_VALUE_END))==self::DB_FORCED_VALUE_END);
     }
 
     static function getForcedValue($data) {
@@ -129,6 +129,15 @@ abstract class AbstractDb
      * @return int количество обработанных записей
      */
     abstract function insert($table, $data);
+
+    /**
+     * Выполняет многострочную SQL-вставку данных в таблицу.
+     * @param string $table имя таблицы
+     * @param array $names массив имён полей для вставки.
+     * @param array $rows массив данных для вставки.
+     * @return int количество обработанных записей
+     */
+    abstract function insertMulti($table, $names, $rows);
 
     /**
      * Выполняет SQL-replace данных в таблицу.

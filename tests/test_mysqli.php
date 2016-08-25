@@ -15,6 +15,17 @@ $db_settings = [
 $db = new Db($db_settings);
 
 // $db->insert('test', ['name' => 'name5', 'description' => 'description5']);
+/*
+ $db->insertMulti(
+    'test',
+    ['name', 'description'],
+    [
+        ['n1', 'd1'],
+        ['n2', 'd2'],
+        ['n3', 'd3'],
+        ['n4', 'd4'],
+    ]);
+*/
 // $db->update('test', ['name' => 'name 3', 'description' => 'description #3'], 'id=3');
 // $db->delete('test', 5);
 // $db->delete('test', 'name4', 'name');
@@ -25,4 +36,4 @@ while($record = $recordset->fetch()) {
     var_dump($record->asArray());
 }
 */
-$value = $db->getValue('SELECT * FROM `test`',2,2); var_dump($value);
+//$value = $db->getValue('SELECT * FROM `test`',2,2); var_dump($value);

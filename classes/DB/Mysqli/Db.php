@@ -123,6 +123,15 @@ final class Db extends \DB\AbstractDb
         return $result;
     }
 
+    function insertMulti($table, $names, $rows)
+    {
+        $escapedRows = $this->escape($rows);
+        foreach ($escapedRows as $row) {
+            $data[] = '(' . implode(',', $row) . ')';
+        }
+        $result = $this->query("INSERT INTO `$table` (`" . implode('`, `', $names) . '`) VALUES ' . implode(', ', $data));
+    }
+
     function replace($table, $data) {
         $escapedData = $this->escape($data);
         $result = $this->query("REPLACE `$table` (`".implode('`, `',array_keys($escapedData)).'`) VALUES ('.implode(', ',array_values($escapedData)).")");
